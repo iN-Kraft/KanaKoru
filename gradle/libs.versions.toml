@@ -1,0 +1,72 @@
+[versions]
+activity = "1.12.3"
+agp = "9.0.0"
+android-core = "1.17.0"
+android-material = "1.13.0"
+arrow = "2.2.1.1"
+coil = "3.3.0"
+compose = "1.10.0"
+coroutines = "1.10.2"
+desugar = "2.1.5"
+detekt = "2.0.0-alpha.2"
+iNKraft-utils = "1.1.0"
+kodein = "7.30.0"
+kotlin = "2.3.0"
+ksp = "2.3.5"
+ktfmt = "0.25.0"
+material3 = "1.10.0-alpha05"
+navigation3 = "1.0.0"
+navigation3-ui = "1.0.0-alpha06"
+openrewrite = "7.25.0"
+sentry = "0.23.1"
+serialization = "1.10.0"
+
+[libraries]
+activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity" }
+android = { group = "androidx.core", name = "core-ktx", version.ref = "android-core" }
+android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
+arrow = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
+arrow-coroutines = { group = "io.arrow-kt", name = "arrow-fx-coroutines", version.ref = "arrow" }
+arrow-optics = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
+arrow-resilience = { group = "io.arrow-kt", name = "arrow-resilience", version.ref = "arrow" }
+arrow-serialization = { group = "io.arrow-kt", name = "arrow-core-serialization", version.ref = "arrow" }
+coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-svg = { group = "io.coil-kt.coil3", name = "coil-svg", version.ref = "coil" }
+compose = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "compose" }
+compose-foundation = { group = "org.jetbrains.compose.foundation", name = "foundation", version.ref = "compose" }
+compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "material3" }
+compose-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "compose" }
+compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "compose" }
+compose-ui-tooling = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
+coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-js", version.ref = "coroutines" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
+inkraft-utils = { group = "dev.datlag.inkraft", name = "utils", version.ref = "iNKraft-utils" }
+kodein = { group = "org.kodein.di", name = "kodein-di", version.ref = "kodein" }
+kodein-compose = { group = "org.kodein.di", name = "kodein-di-framework-compose", version.ref = "kodein" }
+kodein-compose-runtime = { group = "org.kodein.di", name = "kodein-di-framework-compose-runtime", version.ref = "kodein" }
+navigation3 = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
+navigation3-ui = { group = "org.jetbrains.androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3-ui" }
+reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+sentry = { group = "io.sentry", name = "sentry-kotlin-multiplatform", version.ref = "sentry" }
+serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
+test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+detekt = { id = "dev.detekt", version.ref = "detekt" }
+jvm = { id = "org.jetbrains.kotlin.jvm" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }
+multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+openrewrite = { id = "org.openrewrite.rewrite", version.ref = "openrewrite" }
+sentry = { id = "io.sentry.kotlin.multiplatform.gradle", version.ref = "sentry" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
