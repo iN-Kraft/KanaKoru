@@ -6,6 +6,9 @@ import dev.datlag.kanakoru.feature.kana.navigation.Kana
 import dev.datlag.kanakoru.ui.NavBackStack
 
 fun EntryProviderScope<NavKey>.featureKana(backStack: NavBackStack<NavKey>) {
-    entry<Kana.Hiragana> { HiraganaScreen() }
-    entry<Kana.Katakana> { KatakanaScreen() }
+    val onBack: () -> Unit = { backStack.pop() }
+
+    entry<Kana> { KanaScreen(it, onBack) }
+    entry<Kana.Hiragana> { KanaScreen(Kana.Hiragana, onBack) }
+    entry<Kana.Katakana> { KanaScreen(Kana.Katakana, onBack) }
 }

@@ -1,0 +1,7 @@
+<resources>
+    <string name="topbar_hiragana">Hiragana</string>
+    <string name="topbar_katakana">Katakana</string>
+
+    <string name="description_hiragana">Characterized by its curvy, round, and flowing strokes, Hiragana is the foundational script used for native Japanese words and grammar.</string>
+    <string name="description_katakana">Defined by sharp, angular lines and straight corners, Katakana is the distinct script reserved primarily for foreign words and loanwords.</string>
+</resources>

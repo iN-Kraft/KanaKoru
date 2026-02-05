@@ -17,6 +17,8 @@ object NavSerialization {
                 subclass(Kana.Hiragana::class)
                 subclass(Kana.Katakana::class)
             }
+            subclass(Kana.Hiragana::class)
+            subclass(Kana.Katakana::class)
         }
     }
 

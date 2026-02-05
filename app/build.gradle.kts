@@ -29,8 +29,7 @@ kotlin {
             // api(libs.navigation3.viewmodel)
 
             api(libs.kodein.compose)
-            api(projects.core.kodein)
-            api(projects.core.ui)
+            api(projects.core)
             api(projects.feature)
         }
     }
