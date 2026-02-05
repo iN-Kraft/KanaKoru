@@ -140,4 +140,7 @@ sealed interface Kana : NavKey {
         val latin: String,
     )
 
+    @Serializable
+    data class Draw(val char: Char) : NavKey
+
 }

@@ -37,9 +37,11 @@ kotlin {
 
             implementation(projects.core.kodein)
             implementation(projects.core.ui)
+            implementation(projects.core.dollarN)
             implementation(libs.kodein.compose.runtime)
             implementation(libs.inkraft.utils)
             implementation(libs.datetime)
+            implementation(libs.icons)
             implementation(libs.lifecycle.viewmodel)
         }
 

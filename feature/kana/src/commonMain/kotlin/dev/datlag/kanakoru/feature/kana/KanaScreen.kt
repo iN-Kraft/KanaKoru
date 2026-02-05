@@ -34,6 +34,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.composables.icons.materialsymbols.MaterialSymbols
+import com.composables.icons.materialsymbols.rounded.Arrow_back_ios_new
 import dev.datlag.kanakoru.feature.kana.navigation.Kana
 import dev.datlag.kanakoru.feature.kana.resources.KanaRes
 import dev.datlag.kanakoru.feature.kana.resources.description_hiragana
@@ -49,7 +51,8 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun KanaScreen(
     type: Kana,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onKana: (Kana.Char) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -62,7 +65,7 @@ fun KanaScreen(
                         shapes = IconButtonDefaults.shapes()
                     ) {
                         Icon(
-                            imageVector = Image.MaterialSymbolsArrow_back_ios,
+                            imageVector = MaterialSymbols.Rounded.Arrow_back_ios_new,
                             contentDescription = null
                         )
                     }
@@ -119,7 +122,9 @@ fun KanaScreen(
             }
             items(type.chars.toList()) { char ->
                 ElevatedCard(
-                    onClick = { },
+                    onClick = {
+                        onKana(char)
+                    },
                     modifier = Modifier.fillMaxWidth().aspectRatio(1F),
                     shape = MaterialTheme.shapes.small
                 ) {
