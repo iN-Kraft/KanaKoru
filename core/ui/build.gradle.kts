@@ -34,6 +34,7 @@ kotlin {
 
             implementation(libs.coil.compose)
             implementation(libs.coil.svg)
+            implementation(libs.immutable)
 
             implementation(projects.core.kodein)
             implementation(libs.kodein.compose.runtime)

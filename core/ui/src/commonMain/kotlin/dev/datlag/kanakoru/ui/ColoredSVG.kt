@@ -20,6 +20,9 @@ import coil3.request.ImageRequest
 import dev.datlag.kanakoru.ui.common.rememberDefaultColors
 import dev.datlag.kanakoru.ui.common.toHexString
 import dev.datlag.kanakoru.ui.module.UIModule
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toImmutableList
 import org.kodein.di.compose.localDI
 import org.kodein.di.compose.rememberInstance
 
@@ -45,7 +48,7 @@ fun ColoredSVG(
 ) = with(localDI()) {
     val platformContext by rememberInstance<PlatformContext>()
     val imageLoader by rememberInstance<ImageLoader>(tag = UIModule.SVG_IMAGE_LOADER)
-    val colorsAsStrings: List<String> = remember(colors) { colors.map { it.toHexString() } }
+    val colorsAsStrings: ImmutableList<String> = remember(colors) { colors.map { it.toHexString() }.toImmutableList() }
     val imageRequest =
         remember(model, platformContext, colorsAsStrings, placeholderRegex) {
             ImageRequest.Builder(platformContext)
@@ -56,11 +59,6 @@ fun ColoredSVG(
                 }
                 .build()
         }
-
-    LaunchedEffect(Unit) {
-        println("Colors: $colorsAsStrings")
-        println("Request: $imageRequest")
-    }
 
     AsyncImage(
         model = imageRequest,

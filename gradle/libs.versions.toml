@@ -11,6 +11,7 @@ datetime = "0.7.1"
 desugar = "2.1.5"
 detekt = "2.0.0-alpha.2"
 icons = "2.2.1"
+immutable = "0.4.0"
 iNKraft-utils = "1.1.0"
 kodein = "7.30.0"
 kotlin = "2.3.0"
@@ -50,6 +51,7 @@ coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
 desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
 icons = { group = "com.composables", name = "icons-material-symbols-rounded-cmp", version.ref = "icons" }
+immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable" }
 inkraft-utils = { group = "dev.datlag.inkraft", name = "utils", version.ref = "iNKraft-utils" }
 kodein = { group = "org.kodein.di", name = "kodein-di", version.ref = "kodein" }
 kodein-compose = { group = "org.kodein.di", name = "kodein-di-framework-compose", version.ref = "kodein" }

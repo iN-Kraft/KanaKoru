@@ -18,7 +18,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -83,6 +82,7 @@ fun KanaDrawScreen(
     ) { innerPadding ->
         val contentColor = MaterialTheme.colorScheme.onBackground
         val drawingColor = MaterialTheme.colorScheme.tertiary
+        val templateColor = MaterialTheme.colorScheme.surfaceContainer
 
         Canvas(
             modifier = Modifier
@@ -124,7 +124,7 @@ fun KanaDrawScreen(
                 defaultPaths.forEach { path ->
                     drawPath(
                         path = path,
-                        color = contentColor.copy(alpha = 0.5F),
+                        color = templateColor,
                         style = Stroke(width = 20F / scaleFactor, cap = StrokeCap.Round)
                     )
                 }

@@ -19,6 +19,9 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.savedstate.serialization.SavedStateConfiguration
 import dev.datlag.kanakoru.ui.Constants
 import dev.datlag.kanakoru.ui.NavBackStack
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 fun Color.toHexString(): String {
     val a = Constants.colorFloatToInt(this.alpha)
@@ -38,8 +41,8 @@ fun Color.toHexString(): String {
 @Composable
 internal fun rememberDefaultColors(
     colorScheme: ColorScheme = MaterialTheme.colorScheme
-): List<Color> = remember(colorScheme) {
-    listOf(colorScheme.primary, colorScheme.secondary, colorScheme.tertiary)
+): ImmutableList<Color> = remember(colorScheme) {
+    persistentListOf(colorScheme.primary, colorScheme.secondary, colorScheme.tertiary)
 }
 
 @Composable
