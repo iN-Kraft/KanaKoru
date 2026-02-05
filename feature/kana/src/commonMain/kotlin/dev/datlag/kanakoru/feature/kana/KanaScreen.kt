@@ -120,7 +120,7 @@ fun KanaScreen(
                     textAlign = TextAlign.Center
                 )
             }
-            items(type.chars.toList()) { char ->
+            items(type.chars.toList(), key = { it.direct + it.latin }) { char ->
                 ElevatedCard(
                     onClick = {
                         onKana(char)

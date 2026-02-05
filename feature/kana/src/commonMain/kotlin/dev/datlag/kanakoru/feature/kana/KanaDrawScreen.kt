@@ -23,6 +23,9 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.input.pointer.pointerInput
 import com.composables.icons.materialsymbols.MaterialSymbols
 import com.composables.icons.materialsymbols.rounded.Arrow_back_ios_new
@@ -37,6 +40,11 @@ fun KanaDrawScreen(
 ) {
     val lines = remember { mutableStateListOf<List<Offset>>() }
     val currentLine = remember { mutableStateListOf<Offset>() }
+    val defaultPaths = remember(char) {
+        char.pathData.map { path ->
+            PathParser().parsePathString(path).toPath()
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -99,11 +107,28 @@ fun KanaDrawScreen(
                     )
                 }
         ) {
+            val originalSize = 109f
+            val scaleFactor = size.minDimension / originalSize
+            val offsetX = (size.width - (originalSize * scaleFactor)) / 2
+            val offsetY = (size.height - (originalSize * scaleFactor)) / 2
             val strokeStyle = Stroke(
-                width = 15F,
+                width = 20F,
                 cap = StrokeCap.Round,
                 join = StrokeJoin.Round
             )
+
+            withTransform({
+                translate(left = offsetX, top = offsetY)
+                scale(scale = scaleFactor, pivot = Offset.Zero)
+            }) {
+                defaultPaths.forEach { path ->
+                    drawPath(
+                        path = path,
+                        color = contentColor.copy(alpha = 0.5F),
+                        style = Stroke(width = 20F / scaleFactor, cap = StrokeCap.Round)
+                    )
+                }
+            }
 
             lines.forEach { line ->
                 if (line.size > 1) {
