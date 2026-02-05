@@ -77,10 +77,10 @@ fun KanaScreen(
         }
     ) { innerPadding ->
         LazyVerticalGrid(
-            columns = GridCells.Fixed(5),
+            columns = GridCells.FixedSize(60.dp),
             modifier = Modifier.fillMaxSize(),
             contentPadding = innerPadding.merge(PaddingValues(16.dp)),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             header {

@@ -94,7 +94,7 @@ sealed interface Kana : NavKey {
             Char(direct = 'ソ', latin = "so"),
 
             Char(direct = 'タ', latin = "ta"),
-            Char(direct = 'ラ', latin = "chi"),
+            Char(direct = 'チ', latin = "chi"),
             Char(direct = 'ツ', latin = "tsu"),
             Char(direct = 'テ', latin = "te"),
             Char(direct = 'ト', latin = "to"),
