@@ -26,6 +26,7 @@ kotlin {
         commonMain.dependencies {
             api(libs.compose.material3)
             api(libs.navigation3.ui)
+            // api(libs.navigation3.viewmodel)
 
             api(libs.kodein.compose)
             api(projects.core.kodein)

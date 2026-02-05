@@ -10,7 +10,7 @@ kotlin {
     androidLibrary {
         compileSdk = 36
         minSdk = 21
-        namespace = "dev.datlag.kanakoru.feature"
+        namespace = "dev.datlag.kanakoru.feature.kana.navigation"
     }
 
     iosX64()
@@ -23,9 +23,6 @@ kotlin {
         commonMain.dependencies {
             api(libs.navigation3)
             implementation(libs.serialization)
-
-            api(projects.feature.home)
-            api(projects.feature.kana)
         }
 
         commonTest.dependencies {

@@ -1,0 +1,15 @@
+<resources>
+    <string name="greeting">こんにちは</string>
+    <string name="greeting_morning">おはよう</string>
+    <string name="greeting_evening">こんばんは</string>
+    <string name="greeting_night">おやすみ</string>
+
+    <string name="ready_to_learn">Ready to Learn?</string>
+
+    <string name="hiragana">Hiragana</string>
+    <string name="katakana">Katakana</string>
+    <string name="practise">Practise</string>
+
+    <string name="hiragana_char">あ</string>
+    <string name="katakana_char">ア</string>
+</resources>

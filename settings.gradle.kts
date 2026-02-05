@@ -19,7 +19,10 @@ dependencyResolutionManagement {
 
 include(":app", ":app:android")
 include(":core:kodein", ":core:ui")
-include(":feature", ":feature:home", ":feature:home:navigation")
+
+include(":feature")
+include(":feature:home", ":feature:home:navigation")
+include(":feature:kana", ":feature:kana:navigation")
 
 fun findProperty(key: String): String? {
     val localProperties = java.util.Properties().apply {

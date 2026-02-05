@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-val packageName = "dev.datlag.kanakoru.feature.home"
+val packageName = "dev.datlag.kanakoru.feature.kana"
 
 kotlin {
     androidLibrary {
@@ -33,8 +33,7 @@ kotlin {
             implementation(libs.compose.material3)
 
             implementation(libs.coil.compose)
-            api(projects.feature.home.navigation)
-            implementation(projects.feature.kana.navigation)
+            api(projects.feature.kana.navigation)
 
             implementation(projects.core.kodein)
             implementation(projects.core.ui)
@@ -55,7 +54,7 @@ compose.resources {
     publicResClass = false
     packageOfResClass = "$packageName.resources"
     generateResClass = auto
-    nameOfResClass = "HomeRes"
+    nameOfResClass = "KanaRes"
 }
 
 ktfmt { kotlinLangStyle() }

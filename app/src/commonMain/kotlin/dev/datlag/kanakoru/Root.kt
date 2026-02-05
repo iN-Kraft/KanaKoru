@@ -8,6 +8,7 @@ import androidx.navigation3.ui.NavDisplay
 import dev.datlag.kanakoru.feature.NavSerialization
 import dev.datlag.kanakoru.feature.home.featureHome
 import dev.datlag.kanakoru.feature.home.navigation.Home
+import dev.datlag.kanakoru.feature.kana.featureKana
 import dev.datlag.kanakoru.ui.common.rememberNavBackStack
 
 @Composable
@@ -19,6 +20,7 @@ fun Root() {
         backStack = backStack,
         entryProvider = entryProvider {
             featureHome(backStack)
+            featureKana(backStack)
         }
     )
 }
