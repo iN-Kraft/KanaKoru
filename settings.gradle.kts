@@ -44,8 +44,8 @@ fun RepositoryHandler.iNKraftRepository(repository: String) {
         name = "iNKraft $repository"
         url = uri("https://maven.pkg.github.com/iN-Kraft/$repository")
         credentials {
-            username = findProperty("gpr.user")
-            password = findProperty("gpr.password")
+            username = findProperty("gpr.user") ?: System.getenv("PACKAGING_USERNAME")?.ifBlank { null }
+            password = findProperty("gpr.password") ?: System.getenv("PACKAGING_PASSWORD")?.ifBlank { null }
         }
     }
 }

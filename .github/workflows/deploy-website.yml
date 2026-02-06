@@ -30,6 +30,9 @@ jobs:
 
       - name: "🛠️ Build WasmJS App"
         run: gradle :app:web:composeCompatibilityBrowserDistribution
+        env:
+          PACKAGING_USERNAME: ${{ secrets.PACKAGING_USERNAME }}
+          PACKAGING_PASSWORD: ${{ secrets.PACKAGING_PASSWORD }}
 
       - name: "📄 Configure GitHub Pages"
         uses: actions/configure-pages@v5
