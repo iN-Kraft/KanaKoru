@@ -6,7 +6,6 @@ import dev.datlag.kanakoru.feature.home.resources.HomeRes
 import dev.datlag.kanakoru.feature.home.resources.greeting
 import dev.datlag.kanakoru.feature.home.resources.greeting_evening
 import dev.datlag.kanakoru.feature.home.resources.greeting_morning
-import dev.datlag.kanakoru.feature.home.resources.greeting_night
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,8 +44,7 @@ class HomeViewModel : ViewModel() {
         val message = when (currentHour) {
             in 5..11 -> HomeRes.string.greeting_morning
             in 12..16 -> HomeRes.string.greeting
-            in 17..21 -> HomeRes.string.greeting_evening
-            else -> HomeRes.string.greeting_night
+            else -> HomeRes.string.greeting_evening
         }
 
         _greeting.update { message }

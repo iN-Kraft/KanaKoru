@@ -2,7 +2,6 @@
     <string name="greeting">こんにちは</string>
     <string name="greeting_morning">おはよう</string>
     <string name="greeting_evening">こんばんは</string>
-    <string name="greeting_night">おやすみ</string>
 
     <string name="ready_to_learn">Ready to Learn?</string>
 
