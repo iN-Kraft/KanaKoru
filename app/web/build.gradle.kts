@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.sentry)
 }
 
+val packageName = "dev.datlag.kanakoru.web"
+
 kotlin {
     js {
         browser()
@@ -18,10 +20,18 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.compose.resources)
             implementation(libs.coil)
             implementation(projects.app)
         }
     }
+}
+
+compose.resources {
+    publicResClass = false
+    packageOfResClass = "$packageName.resources"
+    generateResClass = auto
+    nameOfResClass = "WebRes"
 }
 
 ktfmt { kotlinLangStyle() }

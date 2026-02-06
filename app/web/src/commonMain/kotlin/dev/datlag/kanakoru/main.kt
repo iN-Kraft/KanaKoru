@@ -29,7 +29,8 @@ fun main() {
             LocalDI provides di
         ) {
             MaterialExpressiveTheme(
-                colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
+                colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme(),
+                typography = Font.notoSansTypography()
             ) {
                 Root()
             }
