@@ -16,7 +16,7 @@ object UIModule {
         bindSingleton<ImageLoader>(tag = SVG_IMAGE_LOADER) {
             ImageLoader.Builder(context = instance())
                 .components {
-                    add(ColoredSVGDecoder.Factory)
+                    add(ColoredSVGDecoder.Factory())
                     add(SvgDecoder.Factory())
                 }
                 .build()

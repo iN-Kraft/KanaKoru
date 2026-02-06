@@ -65,11 +65,7 @@ internal class ColoredSVGDecoder(
         return SvgDecoder(source = source, options = options).decode()
     }
 
-    companion object Factory : Decoder.Factory {
-        val colors: Extras.Key<List<String>> = Extras.Key(default = emptyList())
-        val regex: Extras.Key<Regex> = Extras.Key(default = Regex(""))
-        val defaultPlaceholderRegex = Regex("""var\(--placeholder-color-(\d+)(?:,\s*(#[0-9a-fA-F]{3,8}))?\)""")
-
+    class Factory : Decoder.Factory {
         override fun create(
             result: SourceFetchResult,
             options: Options,
@@ -77,5 +73,11 @@ internal class ColoredSVGDecoder(
         ): Decoder {
             return ColoredSVGDecoder(result, options)
         }
+    }
+
+    companion object {
+        val colors: Extras.Key<List<String>> = Extras.Key(default = emptyList())
+        val regex: Extras.Key<Regex> = Extras.Key(default = Regex(""))
+        val defaultPlaceholderRegex = Regex("""var\(--placeholder-color-(\d+)(?:,\s*(#[0-9a-fA-F]{3,8}))?\)""")
     }
 }

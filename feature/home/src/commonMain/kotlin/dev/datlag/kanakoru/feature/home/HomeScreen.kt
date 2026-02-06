@@ -20,12 +20,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.datlag.kanakoru.feature.home.resources.HomeRes
 import dev.datlag.kanakoru.feature.home.resources.hiragana
@@ -41,7 +41,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: HomeViewModel = viewModel { HomeViewModel() },
     onHiraganaClick: () -> Unit,
     onKatakanaClick: () -> Unit
 ) {
@@ -57,7 +57,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             header {
-                val greeting by viewModel.greeting.collectAsStateWithLifecycle()
+                val greeting by viewModel.greeting.collectAsState()
 
                 Text(
                     text = stringResource(greeting),
