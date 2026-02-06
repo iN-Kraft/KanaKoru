@@ -3,6 +3,7 @@ package dev.datlag.kanakoru.feature.kana
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -14,6 +15,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -26,10 +29,15 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import com.composables.icons.materialsymbols.MaterialSymbols
 import com.composables.icons.materialsymbols.rounded.Arrow_back_ios_new
 import com.composables.icons.materialsymbols.rounded.Format_paint
+import dev.datlag.kanakoru.dollarn.DollarNRecognizer
+import dev.datlag.kanakoru.dollarn.Point
 import dev.datlag.kanakoru.feature.kana.navigation.Kana
+import kotlinx.collections.immutable.toImmutableList
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -42,7 +50,13 @@ fun KanaDrawScreen(
     val defaultPaths = remember(char) {
         char.pathData.map { path ->
             PathParser().parsePathString(path).toPath()
-        }
+        }.toImmutableList()
+    }
+    val dollarNPaths = remember(defaultPaths) {
+        convertPathToPoints(defaultPaths).toImmutableList()
+    }
+    val dollarNRecognizer = remember(dollarNPaths) {
+        DollarNRecognizer(char.direct, dollarNPaths)
     }
 
     Scaffold(
@@ -77,6 +91,18 @@ fun KanaDrawScreen(
                         )
                     }
                 }
+            )
+        },
+        bottomBar = {
+            val result by remember { derivedStateOf {
+                dollarNRecognizer.recognize(lines.map { stroke ->
+                    stroke.map { offset -> Point(offset.x, offset.y) }
+                })
+            } }
+
+            Text(
+                modifier = Modifier.fillMaxWidth().padding(8.dp),
+                text = "Match: ${(result.score * 100F).roundToInt()}%"
             )
         }
     ) { innerPadding ->

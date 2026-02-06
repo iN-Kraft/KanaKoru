@@ -1,22 +1,24 @@
 package dev.datlag.kanakoru.dollarn
 
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
-class DollarNRecognizer<T : Any>(
-    val strictMode: Boolean,
-    val templates: List<Template<T>>
+class DollarNRecognizer(
+    key: Char,
+    rawStrokes: List<List<Point>>
 ) {
 
     private val numResamplePoints = 96
     private val squareSize = 250F
     private val origin = Point(0F, 0F)
+    private val templates = listOf(Template(key, normalize(rawStrokes)))
 
-    fun recognize(rawStrokes: List<List<Point>>): RecognitionResult<out Any> {
+    fun recognize(rawStrokes: List<List<Point>>): RecognitionResult {
         require(templates.isNotEmpty())
 
         val points = normalize(rawStrokes)
-        var bestTemplate: Template<out Any>? = null
+        var bestTemplate: Template? = null
         var bestDistance = Float.MAX_VALUE
 
         for (template in templates) {
@@ -88,10 +90,12 @@ class DollarNRecognizer<T : Any>(
     private fun scaleTo(points: List<Point>, size: Float): List<Point> {
         val box = boundingBox(points)
         val newPoints = mutableListOf<Point>()
+        val maxDimension = max(box.width, box.height)
+        val scale = if (maxDimension > 0) size / maxDimension else 1F
 
         for (p in points) {
-            val qx = p.x * (size / box.width)
-            val qy = p.y * (size / box.height)
+            val qx = p.x * scale
+            val qy = p.y * scale
 
             newPoints.add(Point(qx, qy))
         }
@@ -164,10 +168,10 @@ class DollarNRecognizer<T : Any>(
         return Point(x / points.size, y / points.size)
     }
 
-    data class Template<T : Any>(
-        val key: T,
+    data class Template(
+        val key: Char,
         val points: List<Point>
     )
 
-    data class RecognitionResult<T : Any>(val key: T?, val score: Float)
+    data class RecognitionResult(val key: Char?, val score: Float)
 }

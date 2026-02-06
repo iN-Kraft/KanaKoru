@@ -43,6 +43,7 @@ kotlin {
             implementation(libs.datetime)
             implementation(libs.icons)
             implementation(libs.lifecycle.viewmodel)
+            implementation(libs.immutable)
         }
 
         commonTest.dependencies {
