@@ -21,7 +21,6 @@ import dev.datlag.kanakoru.ui.common.rememberDefaultColors
 import dev.datlag.kanakoru.ui.common.toHexString
 import dev.datlag.kanakoru.ui.module.UIModule
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toImmutableList
 import org.kodein.di.compose.localDI
 import org.kodein.di.compose.rememberInstance
