@@ -17,6 +17,7 @@ kodein = "7.30.0"
 kotlin = "2.3.0"
 ksp = "2.3.5"
 ktfmt = "0.25.0"
+ktor = "3.4.0"
 lifecycle = "2.9.6"
 material3 = "1.10.0-alpha05"
 navigation3 = "1.0.0"
@@ -37,6 +38,7 @@ arrow-resilience = { group = "io.arrow-kt", name = "arrow-resilience", version.r
 arrow-serialization = { group = "io.arrow-kt", name = "arrow-core-serialization", version.ref = "arrow" }
 coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
 coil-svg = { group = "io.coil-kt.coil3", name = "coil-svg", version.ref = "coil" }
 compose = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "compose" }
 compose-foundation = { group = "org.jetbrains.compose.foundation", name = "foundation", version.ref = "compose" }
@@ -56,6 +58,8 @@ inkraft-utils = { group = "dev.datlag.inkraft", name = "utils", version.ref = "i
 kodein = { group = "org.kodein.di", name = "kodein-di", version.ref = "kodein" }
 kodein-compose = { group = "org.kodein.di", name = "kodein-di-framework-compose", version.ref = "kodein" }
 kodein-compose-runtime = { group = "org.kodein.di", name = "kodein-di-framework-compose-runtime", version.ref = "kodein" }
+ktor-js = { group = "io.ktor", name = "ktor-client-js", version.ref = "ktor" }
+ktor-wasm-js = { group = "io.ktor", name = "ktor-client-js-wasm-js", version.ref = "ktor" }
 lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 navigation3 = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
 navigation3-ui = { group = "org.jetbrains.androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3-ui" }

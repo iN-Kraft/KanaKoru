@@ -40,6 +40,7 @@ kotlin {
             implementation(libs.sentry)
 
             implementation(libs.coil.compose)
+            implementation(libs.coil.network)
             implementation(libs.coil.svg)
             implementation(libs.immutable)
 

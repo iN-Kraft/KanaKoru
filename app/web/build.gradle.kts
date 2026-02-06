@@ -19,9 +19,16 @@ kotlin {
     }
 
     sourceSets {
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.wasm.js)
+        }
+
         commonMain.dependencies {
             implementation(libs.compose.resources)
             implementation(libs.coil)
+            implementation(libs.coil.network)
+            implementation(libs.coil.svg)
+            implementation(libs.ktor.js)
             implementation(projects.app)
         }
     }

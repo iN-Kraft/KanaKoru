@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -71,7 +72,7 @@ fun HomeScreen(
             item {
                 Card(
                     onClick = onHiraganaClick,
-                    modifier = Modifier.fillMaxWidth().aspectRatio(1F),
+                    modifier = Modifier.fillMaxWidth().height(200.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -97,7 +98,7 @@ fun HomeScreen(
             item {
                 Card(
                     onClick = onKatakanaClick,
-                    modifier = Modifier.fillMaxWidth().aspectRatio(1F),
+                    modifier = Modifier.fillMaxWidth().height(200.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.tertiaryContainer,
                         contentColor = MaterialTheme.colorScheme.onTertiaryContainer

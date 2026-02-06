@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil3.compose.rememberAsyncImagePainter
 import com.composables.icons.materialsymbols.MaterialSymbols
 import com.composables.icons.materialsymbols.rounded.Arrow_back_ios_new
 import dev.datlag.kanakoru.feature.kana.navigation.Kana
@@ -106,7 +107,13 @@ fun KanaScreen(
                             is Kana.Hiragana -> Image.workInProgress
                             is Kana.Katakana -> Image.aroundTheWorld
                         },
-                        contentDescription = null
+                        contentDescription = null,
+                        fallback = rememberAsyncImagePainter(
+                            Image.workInProgress
+                        ),
+                        onError = { state ->
+                            state.result.throwable.printStackTrace()
+                        }
                     )
                 }
             }
