@@ -30,6 +30,7 @@ kotlin {
             implementation(libs.coil.svg)
             implementation(libs.ktor.js)
             implementation(projects.app)
+            implementation(libs.immutable)
         }
     }
 }
