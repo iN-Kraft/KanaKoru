@@ -18,7 +18,7 @@ dependencyResolutionManagement {
 }
 
 include(":app", ":app:android", ":app:web")
-include(":core", ":core:dollarN", ":core:kodein", ":core:ui")
+include(":core", ":core:dollarN", ":core:kodein", ":core:model", ":core:ui")
 
 include(":feature")
 include(":feature:home", ":feature:home:navigation")

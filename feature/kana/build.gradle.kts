@@ -45,6 +45,7 @@ kotlin {
             implementation(projects.core.kodein)
             implementation(projects.core.ui)
             implementation(projects.core.dollarN)
+            implementation(projects.core.model)
             implementation(libs.kodein.compose.runtime)
             implementation(libs.inkraft.utils)
             implementation(libs.datetime)

@@ -36,19 +36,20 @@ import com.composables.icons.materialsymbols.rounded.Format_paint
 import dev.datlag.kanakoru.dollarn.DollarNRecognizer
 import dev.datlag.kanakoru.dollarn.Point
 import dev.datlag.kanakoru.feature.kana.navigation.Kana
+import dev.datlag.kanakoru.model.JapaneseChar
 import kotlinx.collections.immutable.toImmutableList
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun KanaDrawScreen(
-    char: Kana.Char,
+    char: JapaneseChar,
     onBack: () -> Unit
 ) {
     val lines = remember { mutableStateListOf<List<Offset>>() }
     val currentLine = remember { mutableStateListOf<Offset>() }
     val defaultPaths = remember(char) {
-        char.pathData.map { path ->
+        char.path.data.map { path ->
             PathParser().parsePathString(path).toPath()
         }.toImmutableList()
     }
@@ -56,7 +57,7 @@ fun KanaDrawScreen(
         convertPathToPoints(defaultPaths).toImmutableList()
     }
     val dollarNRecognizer = remember(dollarNPaths) {
-        DollarNRecognizer(char.direct, dollarNPaths)
+        DollarNRecognizer(char.value, dollarNPaths)
     }
 
     Scaffold(

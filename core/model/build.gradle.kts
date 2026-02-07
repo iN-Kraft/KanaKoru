@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktfmt)
 }
@@ -10,32 +11,32 @@ kotlin {
     androidLibrary {
         compileSdk = 36
         minSdk = 21
-        namespace = "dev.datlag.kanakoru.feature.kana.navigation"
+        namespace = "dev.datlag.kanakoru.model"
     }
 
+    jvm()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
 
     js {
         browser()
+        nodejs()
     }
     wasmJs {
         browser()
+        nodejs()
+        d8()
     }
 
     applyDefaultHierarchyTemplate()
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.navigation3)
+            implementation(libs.arrow)
+            implementation(libs.inkraft.utils)
             implementation(libs.serialization)
-            implementation(projects.core.model)
-        }
-
-        commonTest.dependencies {
-            implementation(libs.coroutines.test)
-            implementation(libs.test)
+            implementation(libs.immutable)
         }
     }
 }

@@ -28,6 +28,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,9 +45,11 @@ import dev.datlag.kanakoru.feature.kana.resources.description_hiragana
 import dev.datlag.kanakoru.feature.kana.resources.description_katakana
 import dev.datlag.kanakoru.feature.kana.resources.topbar_hiragana
 import dev.datlag.kanakoru.feature.kana.resources.topbar_katakana
+import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.ui.ColoredSVG
 import dev.datlag.kanakoru.ui.common.header
 import dev.datlag.kanakoru.ui.common.merge
+import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -53,7 +57,7 @@ import org.jetbrains.compose.resources.stringResource
 fun KanaScreen(
     type: Kana,
     onBack: () -> Unit,
-    onKana: (Kana.Char) -> Unit
+    onKana: (JapaneseChar) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -80,6 +84,13 @@ fun KanaScreen(
             )
         }
     ) { innerPadding ->
+        val chars = remember(type) {
+            when (type) {
+                is Kana.Hiragana -> JapaneseChar.Hiragana.chars
+                is Kana.Katakana -> JapaneseChar.Katakana.chars
+            }.toImmutableList()
+        }
+
         LazyVerticalGrid(
             columns = GridCells.FixedSize(60.dp),
             modifier = Modifier.fillMaxSize(),
@@ -127,7 +138,7 @@ fun KanaScreen(
                     textAlign = TextAlign.Center
                 )
             }
-            items(type.chars.toList(), key = { it.direct + it.latin }) { char ->
+            items(chars, key = { it.value + it.romaji }) { char ->
                 ElevatedCard(
                     onClick = {
                         onKana(char)
@@ -144,13 +155,13 @@ fun KanaScreen(
                         Text(
                             modifier = Modifier.fillMaxWidth(),
                             textAlign = TextAlign.Center,
-                            text = char.direct.toString(),
+                            text = char.value.toString(),
                             fontWeight = FontWeight.SemiBold,
                             style = MaterialTheme.typography.headlineMedium
                         )
                         Text(
                             textAlign = TextAlign.Center,
-                            text = char.latin,
+                            text = char.romaji,
                             style = MaterialTheme.typography.labelMedium
                         )
                     }
