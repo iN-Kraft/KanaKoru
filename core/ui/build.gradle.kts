@@ -11,6 +11,8 @@ plugins {
 val packageName = "dev.datlag.kanakoru.ui"
 
 kotlin {
+    compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
+
     androidLibrary {
         compileSdk = 36
         minSdk = 21
@@ -45,6 +47,8 @@ kotlin {
             implementation(libs.immutable)
 
             implementation(projects.core.kodein)
+            implementation(projects.core.model)
+            implementation(projects.core.dollarN)
             implementation(libs.kodein.compose.runtime)
         }
 

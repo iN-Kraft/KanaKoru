@@ -1,43 +1,32 @@
 package dev.datlag.kanakoru.feature.kana
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.scale
-import androidx.compose.ui.graphics.drawscope.withTransform
-import androidx.compose.ui.graphics.vector.PathParser
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.dp
+import arrow.core.Either
 import com.composables.icons.materialsymbols.MaterialSymbols
 import com.composables.icons.materialsymbols.rounded.Arrow_back_ios_new
+import com.composables.icons.materialsymbols.rounded.Check
 import com.composables.icons.materialsymbols.rounded.Format_paint
-import dev.datlag.kanakoru.dollarn.DollarNRecognizer
-import dev.datlag.kanakoru.dollarn.Point
-import dev.datlag.kanakoru.feature.kana.navigation.Kana
 import dev.datlag.kanakoru.model.JapaneseChar
-import kotlinx.collections.immutable.toImmutableList
+import dev.datlag.kanakoru.ui.DollarNCanvas
+import dev.datlag.kanakoru.ui.model.CanvasChar
+import dev.datlag.kanakoru.ui.model.rememberDollarNCanvasState
+import dev.datlag.kanakoru.dollarn.DollarN
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -46,19 +35,14 @@ fun KanaDrawScreen(
     char: JapaneseChar,
     onBack: () -> Unit
 ) {
-    val lines = remember { mutableStateListOf<List<Offset>>() }
-    val currentLine = remember { mutableStateListOf<Offset>() }
-    val defaultPaths = remember(char) {
-        char.path.data.map { path ->
-            PathParser().parsePathString(path).toPath()
-        }.toImmutableList()
-    }
-    val dollarNPaths = remember(defaultPaths) {
-        convertPathToPoints(defaultPaths).toImmutableList()
-    }
-    val dollarNRecognizer = remember(dollarNPaths) {
-        DollarNRecognizer(char.value, dollarNPaths)
-    }
+    val canvasChar = remember(char) { CanvasChar(char) }
+    var recognitionState by remember { mutableStateOf<Either<DollarN.Error, DollarN.Result>>(Either.Left(DollarN.Error.NoStrokes)) }
+    val dollarNCanvasState = rememberDollarNCanvasState(
+        char = canvasChar,
+        onResult = { eitherResult ->
+            recognitionState = eitherResult
+        }
+    )
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -81,8 +65,7 @@ fun KanaDrawScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            lines.clear()
-                            currentLine.clear()
+                            dollarNCanvasState.clear()
                         },
                         shapes = IconButtonDefaults.shapes()
                     ) {
@@ -95,97 +78,34 @@ fun KanaDrawScreen(
             )
         },
         bottomBar = {
-            val result by remember { derivedStateOf {
-                dollarNRecognizer.recognize(lines.map { stroke ->
-                    stroke.map { offset -> Point(offset.x, offset.y) }
-                })
-            } }
-
-            Text(
-                modifier = Modifier.fillMaxWidth().padding(8.dp),
-                text = "Match: ${(result.score * 100F).roundToInt()}%"
-            )
+            recognitionState.onLeft {
+                Text(text = "State: $it")
+            }.onRight {
+                Text(text = "Match: ${(it.score * 100F).roundToInt()}%")
+            }
+        },
+        floatingActionButton = {
+            when (val current = recognitionState) {
+                is Either.Left -> { }
+                is Either.Right<DollarN.Result> -> {
+                    if (current.value.score >= 0.9) {
+                        FloatingActionButton(
+                            onClick = { },
+                        ) {
+                            Icon(
+                                imageVector = MaterialSymbols.Rounded.Check,
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }
+            }
         }
     ) { innerPadding ->
-        val contentColor = MaterialTheme.colorScheme.onBackground
-        val drawingColor = MaterialTheme.colorScheme.tertiary
-        val templateColor = MaterialTheme.colorScheme.surfaceContainer
-
-        Canvas(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDragStart = { startOffset ->
-                            currentLine.clear()
-                            currentLine.add(startOffset)
-                        },
-                        onDrag = { change, _ ->
-                            change.consume()
-                            currentLine.add(change.position)
-                        },
-                        onDragEnd = {
-                            if (currentLine.isNotEmpty()) {
-                                lines.add(currentLine.toList())
-                                currentLine.clear()
-                            }
-                        }
-                    )
-                }
-        ) {
-            val originalSize = 109f
-            val scaleFactor = size.minDimension / originalSize
-            val offsetX = (size.width - (originalSize * scaleFactor)) / 2
-            val offsetY = (size.height - (originalSize * scaleFactor)) / 2
-            val strokeStyle = Stroke(
-                width = 20F,
-                cap = StrokeCap.Round,
-                join = StrokeJoin.Round
-            )
-
-            withTransform({
-                translate(left = offsetX, top = offsetY)
-                scale(scale = scaleFactor, pivot = Offset.Zero)
-            }) {
-                defaultPaths.forEach { path ->
-                    drawPath(
-                        path = path,
-                        color = templateColor,
-                        style = Stroke(width = 20F / scaleFactor, cap = StrokeCap.Round)
-                    )
-                }
-            }
-
-            lines.forEach { line ->
-                if (line.size > 1) {
-                    drawPath(
-                        path = Path().apply {
-                            moveTo(line.first().x, line.first().y)
-
-                            for (i in 1 until line.size) {
-                                lineTo(line[i].x, line[i].y)
-                            }
-                        },
-                        color = contentColor,
-                        style = strokeStyle
-                    )
-                }
-            }
-
-            if (currentLine.size > 1) {
-                drawPath(
-                    path = Path().apply {
-                        moveTo(currentLine.first().x, currentLine.first().y)
-
-                        for (i in 1 until currentLine.size) {
-                            lineTo(currentLine[i].x, currentLine[i].y)
-                        }
-                    },
-                    color = drawingColor,
-                    style = strokeStyle
-                )
-            }
-        }
+        DollarNCanvas(
+            char = canvasChar,
+            state = dollarNCanvasState,
+            modifier = Modifier.fillMaxSize().padding(innerPadding)
+        )
     }
 }

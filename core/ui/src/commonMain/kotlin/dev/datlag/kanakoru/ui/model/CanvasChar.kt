@@ -1,0 +1,94 @@
+package dev.datlag.kanakoru.ui.model
+
+import androidx.compose.runtime.Immutable
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.vector.PathParser
+import dev.datlag.kanakoru.dollarn.Point
+import dev.datlag.kanakoru.model.JapaneseChar
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+
+@Immutable
+data class CanvasChar(
+    val char: Char,
+    val originalWidth: Float,
+    val originalHeight: Float,
+    val strokes: ImmutableList<Stroke>
+) {
+
+    val points = strokes.map { it.points }.toImmutableList()
+
+    @Immutable
+    data class Stroke(
+        val index: Int,
+        val path: Path,
+        val points: ImmutableList<Point>,
+        val startOffset: Offset
+    )
+
+    companion object {
+        operator fun invoke(
+            char: Char,
+            width: Number,
+            height: Number,
+            rawPathData: List<String>
+        ): CanvasChar {
+            val measure = PathMeasure()
+            val strokes = rawPathData.mapIndexed { index, pathData ->
+                val path = PathParser().parsePathString(pathData).toPath()
+                val points = convertPathToPoints(path, measure)
+                val startOffset = points.firstOrNull()?.let { Offset(it.x, it.y) }
+
+                Stroke(
+                    index = index,
+                    path = path,
+                    points = points,
+                    startOffset = startOffset ?: Offset.Unspecified,
+                )
+            }.toImmutableList()
+
+            return CanvasChar(
+                char = char,
+                originalWidth = width.toFloat(),
+                originalHeight = height.toFloat(),
+                strokes = strokes
+            )
+        }
+
+        operator fun invoke(japaneseChar: JapaneseChar) = invoke(
+            char = japaneseChar.value,
+            width = japaneseChar.path.width,
+            height = japaneseChar.path.height,
+            rawPathData = japaneseChar.path.data
+        )
+
+        private fun convertPathToPoints(
+            path: Path,
+            measure: PathMeasure,
+            sampleDistance: Float = 5F
+        ): ImmutableList<Point> {
+            measure.setPath(path, false)
+            val length = measure.length
+
+            if (length <= 0) {
+                return persistentListOf()
+            }
+
+            val points = generateSequence(0F) { it + sampleDistance }
+                .takeWhile { it < length }
+                .map { distance ->
+                    val offset = measure.getPosition(distance)
+                    Point(offset.x, offset.y)
+                }
+                .toMutableList()
+
+            val endOffset = measure.getPosition(length)
+            points.add(Point(endOffset.x, endOffset.y))
+
+            return points.toImmutableList()
+        }
+    }
+}

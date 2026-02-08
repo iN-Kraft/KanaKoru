@@ -12,6 +12,8 @@ plugins {
 val packageName = "dev.datlag.kanakoru.feature.kana"
 
 kotlin {
+    compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
+
     androidLibrary {
         compileSdk = 36
         minSdk = 21

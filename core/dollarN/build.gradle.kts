@@ -8,6 +8,8 @@ plugins {
 }
 
 kotlin {
+    compilerOptions.freeCompilerArgs.add("-Xcontext-parameters")
+
     androidLibrary {
         compileSdk = 36
         minSdk = 21
@@ -33,9 +35,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.arrow)
+            api(libs.arrow)
             implementation(libs.inkraft.utils)
             implementation(libs.serialization)
+            implementation(libs.immutable)
+            implementation(projects.core.model)
         }
     }
 }

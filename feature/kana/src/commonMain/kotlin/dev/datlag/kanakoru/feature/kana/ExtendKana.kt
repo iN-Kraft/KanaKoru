@@ -8,6 +8,8 @@ import dev.datlag.kanakoru.dollarn.Point
 import dev.datlag.kanakoru.feature.kana.navigation.Kana
 import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.ui.NavBackStack
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 fun EntryProviderScope<NavKey>.featureKana(backStack: NavBackStack<NavKey>) {
     val onBack: () -> Unit = { backStack.pop() }
@@ -20,8 +22,8 @@ fun EntryProviderScope<NavKey>.featureKana(backStack: NavBackStack<NavKey>) {
     entry<Kana.Draw> { KanaDrawScreen(it.char, onBack) }
 }
 
-fun convertPathToPoints(paths: List<Path>, sampleDistance: Float = 5F): List<List<Point>> {
-    val allStrokes = mutableListOf<List<Point>>()
+fun convertPathToPoints(paths: List<Path>, sampleDistance: Float = 5F): ImmutableList<ImmutableList<Point>> {
+    val allStrokes = mutableListOf<ImmutableList<Point>>()
     val measure = PathMeasure()
 
     for (path in paths) {
@@ -40,9 +42,9 @@ fun convertPathToPoints(paths: List<Path>, sampleDistance: Float = 5F): List<Lis
 
             val endOffset = measure.getPosition(length)
             currentStroke.add(Point(endOffset.x, endOffset.y))
-            allStrokes.add(currentStroke)
+            allStrokes.add(currentStroke.toImmutableList())
         }
     }
 
-    return allStrokes
+    return allStrokes.toImmutableList()
 }
