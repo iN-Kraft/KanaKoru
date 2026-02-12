@@ -3,9 +3,12 @@ package dev.datlag.kanakoru.ui.model
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Path
 import arrow.core.Either
 import arrow.core.raise.either
 import dev.datlag.kanakoru.dollarn.Point
@@ -26,31 +29,54 @@ class DollarNCanvasState(
         ).toImmutableMap()
     )
 
-    private val _completedStrokes = mutableStateListOf<List<Point>>()
-    val completedStrokes: ImmutableList<ImmutableList<Point>>
-        get() = _completedStrokes.map { it.toImmutableList() }.toImmutableList()
+    private val _completedPoints = mutableStateListOf<ImmutableList<Point>>()
+    val completedPoints: ImmutableList<ImmutableList<Point>>
+        get() = _completedPoints.toImmutableList()
 
-    private val _currentStroke = mutableStateListOf<Point>()
-    val currentStroke: ImmutableList<Point>
-        get() = _currentStroke.toImmutableList()
+    private val _currentPoints = mutableStateListOf<Point>()
+    val currentPoints: ImmutableList<Point>
+        get() = _currentPoints.toImmutableList()
+
+    val completedPaths = mutableStateListOf<Path>()
+    val currentPath = Path()
+
+    var currentPathVersion by mutableLongStateOf(0)
+        private set
 
     fun onDragStart(startPoint: Point) {
-        _currentStroke.clear()
-        _currentStroke.add(startPoint)
+        _currentPoints.clear()
+        _currentPoints.add(startPoint)
+
+        mutatePath {
+            reset()
+            moveTo(startPoint.x, startPoint.y)
+        }
     }
 
     fun onDrag(point: Point) {
-        _currentStroke.add(point)
+        _currentPoints.add(point)
+
+        mutatePath {
+            lineTo(point.x, point.y)
+        }
     }
 
     fun onDragEnd() {
-        if (_currentStroke.isNotEmpty()) {
-            val finishedStroke = _currentStroke.toList()
-            _completedStrokes.add(finishedStroke)
-            _currentStroke.clear()
+        if (_currentPoints.isNotEmpty()) {
+            val finishedPoints = _currentPoints.toImmutableList()
+            _completedPoints.add(finishedPoints)
+
+            val cachedPath = Path()
+            cachedPath.addPath(currentPath)
+            completedPaths.add(cachedPath)
+
+            _currentPoints.clear()
+            mutatePath {
+                reset()
+            }
 
             val result = either {
-                recognizer.recognize(_completedStrokes)
+                recognizer.recognize(completedPoints)
             }
 
             onResult(result)
@@ -58,12 +84,25 @@ class DollarNCanvasState(
     }
 
     fun onDragCancel() {
-        _currentStroke.clear()
+        _currentPoints.clear()
+        mutatePath {
+            reset()
+        }
     }
 
     fun clear() {
-        _completedStrokes.clear()
-        _currentStroke.clear()
+        _completedPoints.clear()
+        _currentPoints.clear()
+
+        completedPaths.clear()
+        mutatePath {
+            reset()
+        }
+    }
+
+    private fun mutatePath(block: Path.() -> Unit) {
+        block(currentPath)
+        currentPathVersion++
     }
 }
 
