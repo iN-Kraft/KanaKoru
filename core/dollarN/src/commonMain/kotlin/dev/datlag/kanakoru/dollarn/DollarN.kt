@@ -7,6 +7,8 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import kotlin.jvm.JvmField
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -30,15 +32,23 @@ class DollarN(
         get() = this.templates.maxOfOrNull { it.strokeCount } ?: 0
 
     context(_: Raise<Error>)
-    fun recognize(rawStrokes: List<List<Point>>): Result {
+    fun recognize(
+        rawStrokes: List<List<Point>>,
+        sameCount: Boolean = true
+    ): Result {
         ensure(templates.isNotEmpty()) {
             raise(Error.NoTemplateProvided)
         }
         ensure(rawStrokes.size <= maxTemplateStrokeCount) {
-            raise(Error.TooManyStrokes)
+            raise(Error.StrokeCountMismatch(maxTemplateStrokeCount, rawStrokes.size))
         }
         ensure(rawStrokes.isNotEmpty()) {
-            raise(Error.NoStrokes)
+            raise(Error.StrokeCountMismatch(maxTemplateStrokeCount, 0))
+        }
+        if (sameCount) {
+            ensure(rawStrokes.size == maxTemplateStrokeCount) {
+                raise(Error.StrokeCountMismatch(maxTemplateStrokeCount, rawStrokes.size))
+            }
         }
 
         val points = normalize(rawStrokes)
@@ -187,12 +197,19 @@ class DollarN(
         data object NoTemplateProvided : Error
 
         @Serializable
-        data object TooManyStrokes : Error
-
-        @Serializable
-        data object NoStrokes : Error
-
-        @Serializable
         data object NoMatch : Error
+
+        @Serializable
+        data class StrokeCountMismatch(val expected: Int, val actual: Int) : Error {
+
+            @Transient
+            val hasNoStrokes: Boolean = actual <= 0
+
+            @Transient
+            val hasTooManyStrokes: Boolean = actual > expected
+
+        }
     }
+
+    companion object
 }

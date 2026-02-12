@@ -27,7 +27,8 @@ import dev.datlag.kanakoru.ui.model.DollarNCanvasState
 fun DollarNCanvas(
     char: CanvasChar,
     state: DollarNCanvasState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) {
     val contentColor = MaterialTheme.colorScheme.onBackground
     val drawingColor = MaterialTheme.colorScheme.tertiary
@@ -62,22 +63,24 @@ fun DollarNCanvas(
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDragStart = { offset ->
-                            state.onDragStart(Point(offset.x, offset.y))
-                        },
-                        onDrag = { change, _ ->
-                            change.consume()
-                            state.onDrag(Point(change.position.x, change.position.y))
-                        },
-                        onDragEnd = {
-                            state.onDragEnd()
-                        },
-                        onDragCancel = {
-                            state.onDragCancel()
-                        }
-                    )
+                .pointerInput(enabled) {
+                    if (enabled) {
+                        detectDragGestures(
+                            onDragStart = { offset ->
+                                state.onDragStart(Point(offset.x, offset.y))
+                            },
+                            onDrag = { change, _ ->
+                                change.consume()
+                                state.onDrag(Point(change.position.x, change.position.y))
+                            },
+                            onDragEnd = {
+                                state.onDragEnd()
+                            },
+                            onDragCancel = {
+                                state.onDragCancel()
+                            }
+                        )
+                    }
                 }
         ) {
             withTransform({

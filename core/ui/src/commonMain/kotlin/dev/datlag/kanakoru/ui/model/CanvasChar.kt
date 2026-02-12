@@ -21,6 +21,14 @@ data class CanvasChar(
 
     val points = strokes.map { it.points }.toImmutableList()
 
+    fun takeStrokes(count: Int): CanvasChar {
+        val safeCount = count.coerceIn(0, strokes.size)
+
+        return copy(
+            strokes = this.strokes.take(safeCount).toImmutableList()
+        )
+    }
+
     @Immutable
     data class Stroke(
         val index: Int,

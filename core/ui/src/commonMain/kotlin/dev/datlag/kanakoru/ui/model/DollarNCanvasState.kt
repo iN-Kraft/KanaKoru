@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
@@ -13,21 +14,22 @@ import arrow.core.Either
 import arrow.core.raise.either
 import dev.datlag.kanakoru.dollarn.Point
 import dev.datlag.kanakoru.dollarn.DollarN
+import dev.datlag.kanakoru.ui.DollarNCanvas
+import dev.datlag.kanakoru.ui.common.invoke
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
 
 @Stable
 class DollarNCanvasState(
-    private val char: CanvasChar,
+    initialChar: CanvasChar,
     private val onResult: (Either<DollarN.Error, DollarN.Result>) -> Unit
 ) {
 
-    private val recognizer = DollarN(
-        mapOf(
-            char.char to char.points
-        ).toImmutableMap()
-    )
+    var targetChar by mutableStateOf(initialChar)
+        private set
+
+    private var recognizer = createAlgorithm(targetChar)
 
     private val _completedPoints = mutableStateListOf<ImmutableList<Point>>()
     val completedPoints: ImmutableList<ImmutableList<Point>>
@@ -71,23 +73,15 @@ class DollarNCanvasState(
             completedPaths.add(cachedPath)
 
             _currentPoints.clear()
-            mutatePath {
-                reset()
-            }
+            mutatePath { reset() }
 
-            val result = either {
-                recognizer.recognize(completedPoints)
-            }
-
-            onResult(result)
+            onResult(calculateResult())
         }
     }
 
     fun onDragCancel() {
         _currentPoints.clear()
-        mutatePath {
-            reset()
-        }
+        mutatePath { reset() }
     }
 
     fun clear() {
@@ -95,8 +89,22 @@ class DollarNCanvasState(
         _currentPoints.clear()
 
         completedPaths.clear()
-        mutatePath {
-            reset()
+        mutatePath { reset() }
+
+        onResult(calculateResult())
+    }
+
+    fun updateTarget(newTarget: CanvasChar) {
+        targetChar = newTarget
+        recognizer = createAlgorithm(newTarget)
+    }
+
+    fun undoLastStroke() {
+        if (_completedPoints.isNotEmpty()) {
+            _completedPoints.removeLast()
+            completedPaths.removeLast()
+
+            onResult(calculateResult())
         }
     }
 
@@ -104,6 +112,12 @@ class DollarNCanvasState(
         block(currentPath)
         currentPathVersion++
     }
+
+    private fun calculateResult(): Either<DollarN.Error, DollarN.Result> = either {
+        recognizer.recognize(completedPoints)
+    }
+
+    private fun createAlgorithm(char: CanvasChar): DollarN = DollarN(char)
 }
 
 @Composable
@@ -115,7 +129,7 @@ fun rememberDollarNCanvasState(
 
     return remember(char) {
         DollarNCanvasState(
-            char = char,
+            initialChar = char,
             onResult = { result -> currentOnResult(result) }
         )
     }

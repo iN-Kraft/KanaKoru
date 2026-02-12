@@ -36,13 +36,14 @@ fun KanaDrawScreen(
     onBack: () -> Unit
 ) {
     val canvasChar = remember(char) { CanvasChar(char) }
-    var recognitionState by remember { mutableStateOf<Either<DollarN.Error, DollarN.Result>>(Either.Left(DollarN.Error.NoStrokes)) }
+    var recognitionState by remember { mutableStateOf<Either<DollarN.Error, DollarN.Result>>(Either.Left(DollarN.Error.NoMatch)) }
     val dollarNCanvasState = rememberDollarNCanvasState(
         char = canvasChar,
         onResult = { eitherResult ->
             recognitionState = eitherResult
         }
     )
+    var canvasEnabled by remember { mutableStateOf(true) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -90,7 +91,9 @@ fun KanaDrawScreen(
                 is Either.Right<DollarN.Result> -> {
                     if (current.value.score >= 0.9) {
                         FloatingActionButton(
-                            onClick = { },
+                            onClick = {
+                                canvasEnabled = !canvasEnabled
+                            },
                         ) {
                             Icon(
                                 imageVector = MaterialSymbols.Rounded.Check,
@@ -105,7 +108,8 @@ fun KanaDrawScreen(
         DollarNCanvas(
             char = canvasChar,
             state = dollarNCanvasState,
-            modifier = Modifier.fillMaxSize().padding(innerPadding)
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            enabled = canvasEnabled
         )
     }
 }
