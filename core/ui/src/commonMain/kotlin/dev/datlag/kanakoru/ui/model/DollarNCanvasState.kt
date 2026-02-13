@@ -23,7 +23,7 @@ import kotlinx.collections.immutable.toImmutableMap
 @Stable
 class DollarNCanvasState(
     initialChar: CanvasChar,
-    private val onResult: (Either<DollarN.Error, DollarN.Result>) -> Unit
+    private val onResult: DollarNCanvasState.(Either<DollarN.Error, DollarN.Result>) -> Unit
 ) {
 
     var targetChar by mutableStateOf(initialChar)
@@ -43,6 +43,9 @@ class DollarNCanvasState(
     val currentPath = Path()
 
     var currentPathVersion by mutableLongStateOf(0)
+        private set
+
+    var lastResult by mutableStateOf<Either<DollarN.Error, DollarN.Result>>(Either.Left(DollarN.Error.NoMatch))
         private set
 
     fun onDragStart(startPoint: Point) {
@@ -115,7 +118,7 @@ class DollarNCanvasState(
 
     private fun calculateResult(): Either<DollarN.Error, DollarN.Result> = either {
         recognizer.recognize(completedPoints)
-    }
+    }.also { lastResult = it }
 
     private fun createAlgorithm(char: CanvasChar): DollarN = DollarN(char)
 }
@@ -123,7 +126,7 @@ class DollarNCanvasState(
 @Composable
 fun rememberDollarNCanvasState(
     char: CanvasChar,
-    onResult: (Either<DollarN.Error, DollarN.Result>) -> Unit
+    onResult: DollarNCanvasState.(Either<DollarN.Error, DollarN.Result>) -> Unit
 ): DollarNCanvasState {
     val currentOnResult by rememberUpdatedState(onResult)
 

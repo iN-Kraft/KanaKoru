@@ -16,15 +16,19 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LargeFlexibleTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,15 +44,31 @@ import dev.datlag.kanakoru.ui.common.merge
 import dev.datlag.kanakoru.ui.common.plus
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel { HomeViewModel() },
     onHiraganaClick: () -> Unit,
     onKatakanaClick: () -> Unit
 ) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            LargeFlexibleTopAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                title = {
+                    val greeting by viewModel.greeting.collectAsState()
+
+                    Text(text = stringResource(greeting))
+                },
+                subtitle = {
+                    Text(text = stringResource(HomeRes.string.ready_to_learn))
+                },
+                scrollBehavior = scrollBehavior
+            )
+        }
     ) { innerPadding ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -57,18 +77,6 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            header {
-                val greeting by viewModel.greeting.collectAsState()
-
-                Text(
-                    text = stringResource(greeting),
-                    style = MaterialTheme.typography.displayMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-            header {
-                Text(text = stringResource(HomeRes.string.ready_to_learn))
-            }
             item {
                 Card(
                     onClick = onHiraganaClick,

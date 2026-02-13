@@ -50,6 +50,7 @@ kotlin {
             implementation(projects.core.model)
             implementation(projects.core.dollarN)
             implementation(libs.kodein.compose.runtime)
+            implementation(libs.icons)
         }
 
         commonTest.dependencies {

@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
+import dev.datlag.kanakoru.dollarn.DollarN
 import dev.datlag.kanakoru.ui.model.DollarNCanvasState
 
 @Composable
@@ -28,7 +29,8 @@ fun DollarNCanvas(
     char: CanvasChar,
     state: DollarNCanvasState,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    showHints: Boolean = true,
+    showTemplate: Boolean = true,
 ) {
     val contentColor = MaterialTheme.colorScheme.onBackground
     val drawingColor = MaterialTheme.colorScheme.tertiary
@@ -45,6 +47,15 @@ fun DollarNCanvas(
     }
     val badgeSize = remember(strokeStyle) {
         (strokeStyle.width / 2F).dp
+    }
+    val drawingEnabled = state.lastResult.isLeft { error ->
+        when (error) {
+            is DollarN.Error.NoMatch -> true
+            is DollarN.Error.StrokeCountMismatch -> {
+                error.actual < error.expected
+            }
+            else -> false
+        }
     }
 
     BoxWithConstraints(modifier = modifier) {
@@ -63,8 +74,8 @@ fun DollarNCanvas(
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
-                .pointerInput(enabled) {
-                    if (enabled) {
+                .pointerInput(drawingEnabled) {
+                    if (drawingEnabled) {
                         detectDragGestures(
                             onDragStart = { offset ->
                                 state.onDragStart(Point(offset.x, offset.y))
@@ -83,20 +94,22 @@ fun DollarNCanvas(
                     }
                 }
         ) {
-            withTransform({
-                translate(left = offsetX, top = offsetY)
-                scale(scale = scale, pivot = Offset.Zero)
-            }) {
-                char.strokes.forEach { stroke ->
-                    drawPath(
-                        path = stroke.path,
-                        color = templateColor,
-                        style = Stroke(
-                            width = strokeStyle.width / scale,
-                            cap = strokeStyle.cap,
-                            join = strokeStyle.join
+            if (showTemplate) {
+                withTransform({
+                    translate(left = offsetX, top = offsetY)
+                    scale(scale = scale, pivot = Offset.Zero)
+                }) {
+                    char.strokes.forEach { stroke ->
+                        drawPath(
+                            path = stroke.path,
+                            color = templateColor,
+                            style = Stroke(
+                                width = strokeStyle.width / scale,
+                                cap = strokeStyle.cap,
+                                join = strokeStyle.join
+                            )
                         )
-                    )
+                    }
                 }
             }
 
@@ -116,26 +129,28 @@ fun DollarNCanvas(
                 )
             }
 
-            char.strokes.forEach { stroke ->
-                val screenX = (stroke.startOffset.x * scale) + offsetX
-                val screenY = (stroke.startOffset.y * scale) + offsetY
-                val badgeCenter = Offset(screenX, screenY)
+            if (showHints) {
+                char.strokes.forEach { stroke ->
+                    val screenX = (stroke.startOffset.x * scale) + offsetX
+                    val screenY = (stroke.startOffset.y * scale) + offsetY
+                    val badgeCenter = Offset(screenX, screenY)
 
-                drawCircle(
-                    color = badgeColor,
-                    radius = badgeSize.toPx(),
-                    center = badgeCenter
-                )
+                    drawCircle(
+                        color = badgeColor,
+                        radius = badgeSize.toPx(),
+                        center = badgeCenter
+                    )
 
-                val result = textMeasurer.measure((stroke.index + 1).toString())
-                drawText(
-                    textLayoutResult = result,
-                    topLeft = Offset(
-                        x = screenX - (result.size.width / 2),
-                        y = screenY - (result.size.height / 2)
-                    ),
-                    color = onBadgeColor
-                )
+                    val result = textMeasurer.measure((stroke.index + 1).toString())
+                    drawText(
+                        textLayoutResult = result,
+                        topLeft = Offset(
+                            x = screenX - (result.size.width / 2),
+                            y = screenY - (result.size.height / 2)
+                        ),
+                        color = onBadgeColor
+                    )
+                }
             }
         }
     }
