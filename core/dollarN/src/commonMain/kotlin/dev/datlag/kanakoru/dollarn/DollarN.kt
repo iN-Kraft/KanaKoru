@@ -8,7 +8,6 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlin.jvm.JvmField
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt

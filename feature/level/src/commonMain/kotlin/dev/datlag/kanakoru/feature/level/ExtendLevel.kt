@@ -6,5 +6,5 @@ import dev.datlag.kanakoru.feature.level.navigation.Level
 import dev.datlag.kanakoru.ui.NavBackStack
 
 fun EntryProviderScope<NavKey>.featureLevel(backStack: NavBackStack<NavKey>) {
-    entry<Level> { LevelScreen(it.char) }
+    entry<Level> { LevelScreen(it.char, onBack = { backStack.pop() }) }
 }

@@ -12,13 +12,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Path
 import arrow.core.Either
 import arrow.core.raise.either
-import dev.datlag.kanakoru.dollarn.Point
 import dev.datlag.kanakoru.dollarn.DollarN
-import dev.datlag.kanakoru.ui.DollarNCanvas
+import dev.datlag.kanakoru.dollarn.Point
 import dev.datlag.kanakoru.ui.common.invoke
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

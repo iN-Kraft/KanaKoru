@@ -37,29 +37,15 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.compose.resources)
-            implementation(libs.compose.ui.tooling)
-            implementation(libs.compose.material3)
-
-            implementation(libs.coil.compose)
+            implementation(libs.bundles.feature)
             api(projects.feature.kana.navigation)
             implementation(projects.feature.level.navigation)
 
-            implementation(projects.core.kodein)
-            implementation(projects.core.ui)
-            implementation(projects.core.dollarN)
-            implementation(projects.core.model)
-            implementation(libs.kodein.compose.runtime)
-            implementation(libs.inkraft.utils)
-            implementation(libs.datetime)
-            implementation(libs.icons)
-            implementation(libs.lifecycle.viewmodel)
-            implementation(libs.immutable)
+            implementation(projects.core)
         }
 
         commonTest.dependencies {
-            implementation(libs.coroutines.test)
-            implementation(libs.test)
+            implementation(libs.bundles.test)
         }
     }
 }

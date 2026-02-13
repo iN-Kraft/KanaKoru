@@ -28,13 +28,11 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.navigation3)
-            implementation(libs.serialization)
+            implementation(libs.bundles.feature.navigation)
         }
 
         commonTest.dependencies {
-            implementation(libs.coroutines.test)
-            implementation(libs.test)
+            implementation(libs.bundles.test)
         }
     }
 }

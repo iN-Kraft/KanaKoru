@@ -13,7 +13,9 @@ import dev.datlag.kanakoru.ui.model.rememberDollarNCanvasState
 
 @Composable
 fun GuidedTourScreen(
-    japaneseChar: JapaneseChar
+    japaneseChar: JapaneseChar,
+    onBack: () -> Unit,
+    onFinish: () -> Unit
 ) {
     val fullChar = remember(japaneseChar) {
         CanvasChar(japaneseChar)
@@ -35,8 +37,6 @@ fun GuidedTourScreen(
                     if (currentStep < totalStrokes) {
                         currentStep++
                         updateTarget(fullChar.takeStrokes(currentStep))
-                    } else {
-                        // Complete
                     }
                 } else {
                     undoLastStroke()
@@ -47,9 +47,9 @@ fun GuidedTourScreen(
 
     LevelScaffold(
         title = { Text(text = "Guided Tour $currentStep / $totalStrokes") },
-        onBack = { },
+        onBack = onBack,
         canvasState = state,
         templateChar = currentVisibleChar,
-        onFinish = { }
+        onFinish = onFinish
     )
 }

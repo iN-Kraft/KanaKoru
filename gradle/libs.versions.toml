@@ -74,7 +74,7 @@ serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization
 test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 
 [bundles]
-feature = [ "arrow", "coil-compose", "compose-material3", "compose-resources", "compose-ui-tooling", "datetime", "immutable", "inkraft-utils", "kodein-compose-runtime", "lifecycle", "lifecycle-viewmodel", "navigation3-ui" ]
+feature = [ "arrow", "coil-compose", "compose-material3", "compose-resources", "compose-ui-tooling", "datetime", "icons", "immutable", "inkraft-utils", "kodein-compose-runtime", "lifecycle", "lifecycle-viewmodel", "navigation3-ui" ]
 feature-navigation = [ "arrow", "navigation3", "serialization" ]
 test = [ "coroutines-test", "test" ]
 

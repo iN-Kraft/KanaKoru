@@ -3,9 +3,9 @@ package dev.datlag.kanakoru.ui
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.StateObject
-import androidx.navigation3.runtime.NavBackStack as NavBS
 import androidx.navigation3.runtime.NavKey
 import kotlin.reflect.KClass
+import androidx.navigation3.runtime.NavBackStack as NavBS
 
 class NavBackStack<T : NavKey>(
     private val base: NavBS<T> = NavBS()

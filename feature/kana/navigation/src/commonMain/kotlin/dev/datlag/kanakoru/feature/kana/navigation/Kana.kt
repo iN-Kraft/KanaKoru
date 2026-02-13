@@ -1,7 +1,6 @@
 package dev.datlag.kanakoru.feature.kana.navigation
 
 import androidx.navigation3.runtime.NavKey
-import dev.datlag.kanakoru.model.JapaneseChar
 import kotlinx.serialization.Serializable
 
 @Serializable

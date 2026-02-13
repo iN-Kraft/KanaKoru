@@ -20,7 +20,6 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import dev.datlag.kanakoru.ui.Constants
 import dev.datlag.kanakoru.ui.NavBackStack
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
 fun Color.toHexString(): String {
