@@ -1,12 +1,13 @@
-package dev.datlag.kanakoru.feature.level.guidedtour.navigation
+package dev.datlag.kanakoru.feature.level.trainingwheels.navigation
 
 import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.model.LevelNavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GuidedTour(val japaneseChar: JapaneseChar) : LevelNavKey {
+data class TrainingWheels(val japaneseChar: JapaneseChar) : LevelNavKey {
 
-    override val singleStrokeSupport: Boolean = false
+    override val singleStrokeSupport: Boolean = true
     override val multiStrokeSupport: Boolean = true
+
 }

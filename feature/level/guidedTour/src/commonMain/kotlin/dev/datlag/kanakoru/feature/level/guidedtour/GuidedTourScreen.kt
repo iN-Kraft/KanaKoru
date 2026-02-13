@@ -50,6 +50,7 @@ fun GuidedTourScreen(
         onBack = onBack,
         canvasState = state,
         templateChar = currentVisibleChar,
-        onFinish = onFinish
+        onFinish = onFinish,
+        showHints = false
     )
 }

@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-val packageName = "dev.datlag.kanakoru.feature.level"
+val packageName = "dev.datlag.kanakoru.feature.level.trainingWheels"
 
 kotlin {
     androidLibrary {
@@ -36,9 +36,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.feature)
-            api(projects.feature.level.navigation)
-            implementation(projects.feature.level.guidedTour)
-            implementation(projects.feature.level.trainingWheels)
+            api(projects.feature.level.trainingWheels.navigation)
             implementation(projects.core)
         }
 
@@ -52,7 +50,7 @@ compose.resources {
     publicResClass = false
     packageOfResClass = "$packageName.resources"
     generateResClass = auto
-    nameOfResClass = "LevelRes"
+    nameOfResClass = "TrainingWheelsRes"
 }
 
 ktfmt { kotlinLangStyle() }
