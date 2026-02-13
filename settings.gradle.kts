@@ -14,6 +14,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         iNKraftRepository("Utils")
+        iNKraftRepository("Native-Kommons")
     }
 }
 
@@ -23,6 +24,9 @@ include(":core", ":core:dollarN", ":core:kodein", ":core:model", ":core:ui")
 include(":feature")
 include(":feature:home", ":feature:home:navigation")
 include(":feature:kana", ":feature:kana:navigation")
+
+include(":feature:level", ":feature:level:navigation")
+include(":feature:level:guidedTour", "feature:level:guidedTour:navigation")
 
 fun findProperty(key: String): String? {
     val localProperties = java.util.Properties().apply {

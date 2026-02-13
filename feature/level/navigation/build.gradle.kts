@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.multiplatform)
     alias(libs.plugins.android.library)
+    alias(libs.plugins.serialization)
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktfmt)
 }
@@ -9,7 +10,7 @@ kotlin {
     androidLibrary {
         compileSdk = 36
         minSdk = 21
-        namespace = "dev.datlag.kanakoru.core"
+        namespace = "dev.datlag.kanakoru.feature.level.navigation"
     }
 
     iosX64()
@@ -27,15 +28,12 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.core.kodein)
-            api(projects.core.ui)
-            api(projects.core.dollarN)
+            implementation(libs.bundles.feature.navigation)
             api(projects.core.model)
         }
 
         commonTest.dependencies {
-            implementation(libs.coroutines.test)
-            implementation(libs.test)
+            implementation(libs.bundles.test)
         }
     }
 }

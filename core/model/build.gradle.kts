@@ -37,6 +37,7 @@ kotlin {
             implementation(libs.inkraft.utils)
             implementation(libs.serialization)
             implementation(libs.immutable)
+            implementation(libs.navigation3)
         }
     }
 }

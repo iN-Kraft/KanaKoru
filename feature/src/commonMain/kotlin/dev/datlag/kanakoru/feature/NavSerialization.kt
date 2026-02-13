@@ -4,6 +4,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.savedstate.serialization.SavedStateConfiguration
 import dev.datlag.kanakoru.feature.home.navigation.Home
 import dev.datlag.kanakoru.feature.kana.navigation.Kana
+import dev.datlag.kanakoru.feature.level.navigation.Level
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -19,7 +20,7 @@ object NavSerialization {
             }
             subclass(Kana.Hiragana::class)
             subclass(Kana.Katakana::class)
-            subclass(Kana.Draw::class)
+            subclass(Level::class)
         }
     }
 

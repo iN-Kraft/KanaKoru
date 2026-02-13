@@ -51,6 +51,7 @@ kotlin {
             implementation(projects.core.dollarN)
             implementation(libs.kodein.compose.runtime)
             implementation(libs.icons)
+            implementation(libs.inkraft.cache)
         }
 
         commonTest.dependencies {

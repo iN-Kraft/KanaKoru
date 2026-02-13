@@ -19,6 +19,9 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.composables.icons.materialsymbols.MaterialSymbols
@@ -52,7 +55,10 @@ fun LevelScaffold(
         )
     }
 ) {
-    val isSuccess = canvasState.lastResult.isRight { result -> result.score >= 0.9F }
+    val stateResult by canvasState.lastResult.collectAsState()
+    val isSuccess = remember(stateResult) {
+        stateResult.isRight { result -> result.score >= 0.85F }
+    }
 
     Scaffold(
         modifier = modifier,

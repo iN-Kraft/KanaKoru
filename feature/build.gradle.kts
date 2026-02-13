@@ -33,6 +33,7 @@ kotlin {
 
             api(projects.feature.home)
             api(projects.feature.kana)
+            api(projects.feature.level)
         }
 
         commonTest.dependencies {

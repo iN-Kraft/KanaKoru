@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -48,13 +51,16 @@ fun DollarNCanvas(
     val badgeSize = remember(strokeStyle) {
         (strokeStyle.width / 2F).dp
     }
-    val drawingEnabled = state.lastResult.isLeft { error ->
-        when (error) {
-            is DollarN.Error.NoMatch -> true
-            is DollarN.Error.StrokeCountMismatch -> {
-                error.actual < error.expected
+    val stateResult by state.lastResult.collectAsState()
+    val drawingEnabled = remember(stateResult) {
+        stateResult.isLeft { error ->
+            when (error) {
+                is DollarN.Error.NoMatch -> true
+                is DollarN.Error.StrokeCountMismatch -> {
+                    error.actual < error.expected
+                }
+                else -> false
             }
-            else -> false
         }
     }
 

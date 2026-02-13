@@ -1,5 +1,6 @@
 package dev.datlag.kanakoru.model
 
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
@@ -23,7 +24,7 @@ data class JapaneseChar(
     data class Path(
         val width: Int = KANJI_VG_DEFAULT_SIZE,
         val height: Int = KANJI_VG_DEFAULT_SIZE,
-        val data: List<String>
+        @Serializable(with = ImmutableListSerializer::class) val data: ImmutableList<String>
     ) {
 
         companion object {

@@ -19,6 +19,9 @@ import dev.datlag.kanakoru.ui.common.invoke
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 @Stable
 class DollarNCanvasState(
@@ -45,8 +48,8 @@ class DollarNCanvasState(
     var currentPathVersion by mutableLongStateOf(0)
         private set
 
-    var lastResult by mutableStateOf<Either<DollarN.Error, DollarN.Result>>(Either.Left(DollarN.Error.NoMatch))
-        private set
+    private val _lastResult = MutableStateFlow<Either<DollarN.Error, DollarN.Result>>(Either.Left(DollarN.Error.NoMatch))
+    val lastResult = _lastResult.asStateFlow()
 
     fun onDragStart(startPoint: Point) {
         _currentPoints.clear()
@@ -100,6 +103,8 @@ class DollarNCanvasState(
     fun updateTarget(newTarget: CanvasChar) {
         targetChar = newTarget
         recognizer = createAlgorithm(newTarget)
+
+        onResult(calculateResult())
     }
 
     fun undoLastStroke() {
@@ -118,7 +123,7 @@ class DollarNCanvasState(
 
     private fun calculateResult(): Either<DollarN.Error, DollarN.Result> = either {
         recognizer.recognize(completedPoints)
-    }.also { lastResult = it }
+    }.also { updated -> _lastResult.update { updated } }
 
     private fun createAlgorithm(char: CanvasChar): DollarN = DollarN(char)
 }
@@ -126,11 +131,12 @@ class DollarNCanvasState(
 @Composable
 fun rememberDollarNCanvasState(
     char: CanvasChar,
+    key: Any = char,
     onResult: DollarNCanvasState.(Either<DollarN.Error, DollarN.Result>) -> Unit
 ): DollarNCanvasState {
     val currentOnResult by rememberUpdatedState(onResult)
 
-    return remember(char) {
+    return remember(key) {
         DollarNCanvasState(
             initialChar = char,
             onResult = { result -> currentOnResult(result) }

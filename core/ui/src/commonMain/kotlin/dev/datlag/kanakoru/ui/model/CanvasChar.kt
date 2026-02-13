@@ -7,9 +7,12 @@ import androidx.compose.ui.graphics.PathMeasure
 import androidx.compose.ui.graphics.vector.PathParser
 import dev.datlag.kanakoru.dollarn.Point
 import dev.datlag.kanakoru.model.JapaneseChar
+import dev.datlag.kommons.cache.EvictionPolicy
+import dev.datlag.kommons.cache.InMemoryCache
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.serialization.Serializable
 
 @Immutable
 data class CanvasChar(
@@ -38,12 +41,21 @@ data class CanvasChar(
     )
 
     companion object {
+        private val charCache = InMemoryCache<CharCacheKey, CanvasChar>(maxSize = 10) {
+            evictionPolicy = EvictionPolicy.LRU
+        }
+
         operator fun invoke(
             char: Char,
             width: Number,
             height: Number,
             rawPathData: List<String>
         ): CanvasChar {
+            val cacheKey = CharCacheKey(char, width.toFloat(), height.toFloat())
+            charCache.tryGet(cacheKey)?.let {
+                return it
+            }
+
             val measure = PathMeasure()
             val strokes = rawPathData.mapIndexed { index, pathData ->
                 val path = PathParser().parsePathString(pathData).toPath()
@@ -63,7 +75,9 @@ data class CanvasChar(
                 originalWidth = width.toFloat(),
                 originalHeight = height.toFloat(),
                 strokes = strokes
-            )
+            ).also {
+                charCache.tryPut(cacheKey, it)
+            }
         }
 
         operator fun invoke(japaneseChar: JapaneseChar) = invoke(
@@ -98,5 +112,12 @@ data class CanvasChar(
 
             return points.toImmutableList()
         }
+
+        @Serializable
+        private data class CharCacheKey(
+            val char: Char,
+            val width: Float,
+            val height: Float,
+        )
     }
 }

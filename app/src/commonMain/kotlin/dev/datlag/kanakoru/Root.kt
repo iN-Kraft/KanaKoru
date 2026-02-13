@@ -9,6 +9,7 @@ import dev.datlag.kanakoru.feature.NavSerialization
 import dev.datlag.kanakoru.feature.home.featureHome
 import dev.datlag.kanakoru.feature.home.navigation.Home
 import dev.datlag.kanakoru.feature.kana.featureKana
+import dev.datlag.kanakoru.feature.level.featureLevel
 import dev.datlag.kanakoru.ui.common.rememberNavBackStack
 
 @Composable
@@ -21,6 +22,7 @@ fun Root() {
         entryProvider = entryProvider {
             featureHome(backStack)
             featureKana(backStack)
+            featureLevel(backStack)
         }
     )
 }

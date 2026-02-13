@@ -13,7 +13,4 @@ sealed interface Kana : NavKey {
     @Serializable
     data object Katakana : Kana
 
-    @Serializable
-    data class Draw(val char: JapaneseChar) : NavKey
-
 }

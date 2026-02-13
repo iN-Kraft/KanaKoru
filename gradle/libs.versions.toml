@@ -1,11 +1,11 @@
 [versions]
-activity = "1.12.3"
-agp = "9.0.0"
+activity = "1.12.4"
+agp = "9.0.1"
 android-core = "1.17.0"
 android-material = "1.13.0"
 arrow = "2.2.1.1"
 coil = "3.3.0"
-compose = "1.10.0"
+compose = "1.10.1"
 coroutines = "1.10.2"
 datetime = "0.7.1"
 desugar = "2.1.5"
@@ -13,18 +13,20 @@ detekt = "2.0.0-alpha.2"
 icons = "2.2.1"
 immutable = "0.4.0"
 iNKraft-utils = "1.1.0"
-kodein = "7.30.0"
-kotlin = "2.3.0"
+iNKraft-kommons = "2.0.0"
+kodein = "7.31.0"
+kotlin = "2.3.10"
 ksp = "2.3.5"
 ktfmt = "0.25.0"
 ktor = "3.4.0"
 lifecycle = "2.9.6"
 material3 = "1.10.0-alpha05"
-navigation3 = "1.0.0"
+navigation3 = "1.0.1"
 navigation3-ui = "1.0.0-alpha06"
-openrewrite = "7.25.0"
-sentry = "0.23.1"
+openrewrite = "7.26.0"
+sentry = "0.24.0"
 serialization = "1.10.0"
+versions = "0.53.0"
 
 [libraries]
 activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
@@ -54,12 +56,14 @@ datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version
 desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugar" }
 icons = { group = "com.composables", name = "icons-material-symbols-rounded-cmp", version.ref = "icons" }
 immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable" }
+inkraft-cache = { group = "dev.datlag.kommons", name = "cache", version.ref = "iNKraft-kommons" }
 inkraft-utils = { group = "dev.datlag.inkraft", name = "utils", version.ref = "iNKraft-utils" }
 kodein = { group = "org.kodein.di", name = "kodein-di", version.ref = "kodein" }
 kodein-compose = { group = "org.kodein.di", name = "kodein-di-framework-compose", version.ref = "kodein" }
 kodein-compose-runtime = { group = "org.kodein.di", name = "kodein-di-framework-compose-runtime", version.ref = "kodein" }
 ktor-js = { group = "io.ktor", name = "ktor-client-js", version.ref = "ktor" }
 ktor-wasm-js = { group = "io.ktor", name = "ktor-client-js-wasm-js", version.ref = "ktor" }
+lifecycle = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
 lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 navigation3 = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "navigation3" }
 navigation3-ui = { group = "org.jetbrains.androidx.navigation3", name = "navigation3-ui", version.ref = "navigation3-ui" }
@@ -68,6 +72,11 @@ reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.
 sentry = { group = "io.sentry", name = "sentry-kotlin-multiplatform", version.ref = "sentry" }
 serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
 test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+
+[bundles]
+feature = [ "arrow", "coil-compose", "compose-material3", "compose-resources", "compose-ui-tooling", "datetime", "immutable", "inkraft-utils", "kodein-compose-runtime", "lifecycle", "lifecycle-viewmodel", "navigation3-ui" ]
+feature-navigation = [ "arrow", "navigation3", "serialization" ]
+test = [ "coroutines-test", "test" ]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -83,3 +92,4 @@ multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotl
 openrewrite = { id = "org.openrewrite.rewrite", version.ref = "openrewrite" }
 sentry = { id = "io.sentry.kotlin.multiplatform.gradle", version.ref = "sentry" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }

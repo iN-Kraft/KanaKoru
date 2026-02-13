@@ -43,6 +43,7 @@ kotlin {
 
             implementation(libs.coil.compose)
             api(projects.feature.kana.navigation)
+            implementation(projects.feature.level.navigation)
 
             implementation(projects.core.kodein)
             implementation(projects.core.ui)
