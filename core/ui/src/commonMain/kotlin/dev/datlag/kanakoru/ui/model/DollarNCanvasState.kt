@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Path
@@ -17,14 +18,21 @@ import dev.datlag.kanakoru.dollarn.Point
 import dev.datlag.kanakoru.ui.common.invoke
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 @Stable
 class DollarNCanvasState(
     initialChar: CanvasChar,
-    private val onResult: DollarNCanvasState.(Either<DollarN.Error, DollarN.Result>) -> Unit
+    private val scope: CoroutineScope,
+    private val onResult: suspend DollarNCanvasState.(Either<DollarN.Error, DollarN.Result>) -> Unit
 ) {
 
     var targetChar by mutableStateOf(initialChar)
@@ -48,6 +56,8 @@ class DollarNCanvasState(
 
     private val _lastResult = MutableStateFlow<Either<DollarN.Error, DollarN.Result>>(Either.Left(DollarN.Error.NoMatch))
     val lastResult = _lastResult.asStateFlow()
+
+    private var calculationJob: Job? = null
 
     fun onDragStart(startPoint: Point) {
         _currentPoints.clear()
@@ -79,7 +89,7 @@ class DollarNCanvasState(
             _currentPoints.clear()
             mutatePath { reset() }
 
-            onResult(calculateResult())
+            calculateResult()
         }
     }
 
@@ -95,14 +105,14 @@ class DollarNCanvasState(
         completedPaths.clear()
         mutatePath { reset() }
 
-        onResult(calculateResult())
+        calculateResult()
     }
 
     fun updateTarget(newTarget: CanvasChar) {
         targetChar = newTarget
         recognizer = createAlgorithm(newTarget)
 
-        onResult(calculateResult())
+        calculateResult()
     }
 
     fun undoLastStroke() {
@@ -110,7 +120,7 @@ class DollarNCanvasState(
             _completedPoints.removeLast()
             completedPaths.removeLast()
 
-            onResult(calculateResult())
+            calculateResult()
         }
     }
 
@@ -119,9 +129,28 @@ class DollarNCanvasState(
         currentPathVersion++
     }
 
-    private fun calculateResult(): Either<DollarN.Error, DollarN.Result> = either {
-        recognizer.recognize(completedPoints)
-    }.also { updated -> _lastResult.update { updated } }
+    private fun calculateResult() {
+        calculationJob?.cancel()
+
+        val pointsSnapshot = completedPoints
+        val recognizerSnapshot = recognizer
+
+        calculationJob = scope.launch(Dispatchers.Default) {
+            ensureActive()
+
+            val result = either {
+                recognizerSnapshot.recognize(pointsSnapshot)
+            }.also { updated ->
+                if (isActive) {
+                    _lastResult.emit(updated)
+                } else {
+                    _lastResult.update { updated }
+                }
+            }
+
+            onResult(result)
+        }
+    }
 
     private fun createAlgorithm(char: CanvasChar): DollarN = DollarN(char)
 }
@@ -133,10 +162,12 @@ fun rememberDollarNCanvasState(
     onResult: DollarNCanvasState.(Either<DollarN.Error, DollarN.Result>) -> Unit
 ): DollarNCanvasState {
     val currentOnResult by rememberUpdatedState(onResult)
+    val scope = rememberCoroutineScope()
 
     return remember(key) {
         DollarNCanvasState(
             initialChar = char,
+            scope = scope,
             onResult = { result -> currentOnResult(result) }
         )
     }

@@ -16,13 +16,15 @@ class DollarN(
     templates: ImmutableMap<Char, ImmutableList<ImmutableList<Point>>>
 ) {
     private val numResamplePoints = 96
+    private val lowResamplePoints = 32
     private val squareSize = 250F
     private val origin = Point(0F, 0F)
+    private val smallStrokeThreshold = 175F
 
     private val templates: ImmutableList<Template> = templates.map { (key, strokeList) ->
         Template(
             key = key,
-            points = normalize(strokeList).toImmutableList(),
+            points = normalize(strokeList, isSmallInput = false).toImmutableList(),
             strokeCount = strokeList.size
         )
     }.toImmutableList()
@@ -49,37 +51,55 @@ class DollarN(
                 raise(Error.StrokeCountMismatch(maxTemplateStrokeCount, rawStrokes.size))
             }
         }
+        val combinedRaw = rawStrokes.flatten()
+        ensure(combinedRaw.isNotEmpty()) {
+            raise(Error.StrokeCountMismatch(maxTemplateStrokeCount, 0))
+        }
 
-        val points = normalize(rawStrokes)
+        val rawBox = boundingBox(combinedRaw)
+        val rawDiagonal = sqrt(rawBox.width * rawBox.width + rawBox.height * rawBox.height)
+        val isSmallInput = rawDiagonal < smallStrokeThreshold
+
+        val points = normalize(rawStrokes, isSmallInput)
         val (bestTemplate, bestDistance) = templates.map { template ->
             template to pathDistance(points, template.points)
         }.minByOrNull { (_, distance) -> distance } ?: raise(Error.NoMatch)
 
         return Result(
             key = bestTemplate.key,
-            score = calculateScore(bestDistance)
+            score = calculateScore(bestDistance, isSmallInput)
         )
     }
 
-    private fun calculateScore(distance: Float): Float {
+    private fun calculateScore(distance: Float, isSmallInput: Boolean): Float {
         if (distance == Float.MAX_VALUE) {
             return 0F
         }
 
         val diagonal = sqrt(2F * squareSize * squareSize)
         val halfDiagonal = diagonal / 2F
-        val score = 1F - (distance / (halfDiagonal))
+
+        val leniency = if (isSmallInput) 1.5F else 1F
+        val score = 1F - (distance / (halfDiagonal * leniency))
 
         return score.coerceIn(0F, 1F)
     }
 
-    private fun normalize(strokes: List<List<Point>>): List<Point> {
+    private fun normalize(strokes: List<List<Point>>, isSmallInput: Boolean): List<Point> {
         val combinedPoints = strokes.flatten()
 
         return combinedPoints
             .takeIf { it.isNotEmpty() }
             ?.let { points ->
-                translateTo(scaleTo(resample(points, numResamplePoints), squareSize), origin)
+                if (isSmallInput) {
+                    val smoothed = resample(points, lowResamplePoints)
+                    val scaled = scaleTo(smoothed, squareSize)
+                    val translated = translateTo(scaled, origin)
+
+                    resample(translated, numResamplePoints)
+                } else {
+                    translateTo(scaleTo(resample(points, numResamplePoints), squareSize), origin)
+                }
             } ?: emptyList()
     }
 
@@ -165,6 +185,10 @@ class DollarN(
             if (p.x > maxX) maxX = p.x
             if (p.y < minY) minY = p.y
             if (p.y > maxY) maxY = p.y
+        }
+
+        if (minX == Float.MAX_VALUE) {
+            return Box(0F, 0F, 0F, 0F)
         }
 
         return Box(minX, minY, maxX - minX, maxY - minY)
