@@ -32,6 +32,19 @@ data class CanvasChar(
         )
     }
 
+    fun splitAfterStrokes(count: Int): Pair<CanvasChar, CanvasChar> {
+        val splitIndex = count.coerceIn(1, strokes.size)
+        val chunkedStrokes = strokes.chunked(splitIndex)
+        val staticPart = copy(
+            strokes = chunkedStrokes.first().toImmutableList()
+        )
+        val activePart = copy(
+            strokes = chunkedStrokes.drop(1).flatten().toImmutableList()
+        )
+
+        return staticPart to activePart
+    }
+
     @Immutable
     data class Stroke(
         val index: Int,

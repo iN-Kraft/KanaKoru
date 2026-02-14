@@ -24,6 +24,8 @@ import dev.datlag.kanakoru.dollarn.DollarN
 import dev.datlag.kanakoru.dollarn.Point
 import dev.datlag.kanakoru.ui.model.CanvasChar
 import dev.datlag.kanakoru.ui.model.DollarNCanvasState
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun DollarNCanvas(
@@ -33,6 +35,7 @@ fun DollarNCanvas(
     showStart: Boolean = true,
     showOrder: Boolean = true,
     showTemplate: Boolean = true,
+    staticStrokes: ImmutableList<CanvasChar.Stroke> = persistentListOf()
 ) {
     val contentColor = MaterialTheme.colorScheme.onBackground
     val drawingColor = MaterialTheme.colorScheme.tertiary
@@ -108,6 +111,25 @@ fun DollarNCanvas(
                         drawPath(
                             path = stroke.path,
                             color = templateColor,
+                            style = Stroke(
+                                width = strokeStyle.width / scale,
+                                cap = strokeStyle.cap,
+                                join = strokeStyle.join
+                            )
+                        )
+                    }
+                }
+            }
+
+            if (staticStrokes.isNotEmpty()) {
+                withTransform({
+                    translate(left = offsetX, top = offsetY)
+                    scale(scale = scale, pivot = Offset.Zero)
+                }) {
+                    staticStrokes.forEach { stroke ->
+                        drawPath(
+                            path = stroke.path,
+                            color = contentColor,
                             style = Stroke(
                                 width = strokeStyle.width / scale,
                                 cap = strokeStyle.cap,

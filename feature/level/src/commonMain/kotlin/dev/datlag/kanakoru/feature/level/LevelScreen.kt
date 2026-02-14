@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
+import dev.datlag.kanakoru.feature.level.finisher.featureLevelFinisher
+import dev.datlag.kanakoru.feature.level.finisher.navigation.Finisher
 import dev.datlag.kanakoru.feature.level.guidedtour.featureLevelGuidedTour
 import dev.datlag.kanakoru.feature.level.tracer.featureLevelTracer
 import dev.datlag.kanakoru.feature.level.trainingwheels.featureLevelTrainingWheels
@@ -37,7 +39,16 @@ fun LevelScreen(
             featureLevelGuidedTour(onBack = onBack, onNext = nextLevel)
             featureLevelTrainingWheels(onBack = onBack, onNext = nextLevel)
             featureLevelTracer(onBack = onBack, onNext = nextLevel)
+            featureLevelFinisher(onBack = {
+                backStack.pop()
+            }, onNext = nextLevel)
         },
-        onBack = onBack
+        onBack = {
+            if (backStack.last() is Finisher) {
+                backStack.pop()
+            } else {
+                onBack()
+            }
+        }
     )
 }
