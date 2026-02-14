@@ -40,7 +40,8 @@ fun LevelScaffold(
     modifier: Modifier = Modifier,
     subtitle: @Composable () -> Unit = { },
     snackBarHost: @Composable () -> Unit = { },
-    showHints: Boolean = true,
+    showStart: Boolean = true,
+    showOrder: Boolean = true,
     showTemplate: Boolean = true,
     onClear: () -> Unit = { canvasState.clear() },
     content: @Composable (PaddingValues) -> Unit = { padding ->
@@ -48,7 +49,8 @@ fun LevelScaffold(
             char = templateChar,
             state = canvasState,
             modifier = Modifier.fillMaxSize().padding(padding),
-            showHints = showHints,
+            showStart = showStart,
+            showOrder = showOrder,
             showTemplate = showTemplate
         )
     }

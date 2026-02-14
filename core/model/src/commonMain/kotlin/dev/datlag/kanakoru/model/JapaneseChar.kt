@@ -20,6 +20,11 @@ data class JapaneseChar(
         path = Path(data = pathData.toImmutableList())
     )
 
+    fun uniqueTag(): String = buildString {
+        append(value)
+        append(romaji)
+    }
+
     @Serializable
     data class Path(
         val width: Int = KANJI_VG_DEFAULT_SIZE,

@@ -28,6 +28,7 @@ include(":feature:kana", ":feature:kana:navigation")
 include(":feature:level", ":feature:level:navigation")
 include(":feature:level:guidedTour", "feature:level:guidedTour:navigation")
 include(":feature:level:trainingWheels", "feature:level:trainingWheels:navigation")
+include(":feature:level:tracer", "feature:level:tracer:navigation")
 
 fun findProperty(key: String): String? {
     val localProperties = java.util.Properties().apply {

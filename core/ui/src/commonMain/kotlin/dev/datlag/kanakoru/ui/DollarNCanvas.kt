@@ -30,7 +30,8 @@ fun DollarNCanvas(
     char: CanvasChar,
     state: DollarNCanvasState,
     modifier: Modifier = Modifier,
-    showHints: Boolean = true,
+    showStart: Boolean = true,
+    showOrder: Boolean = true,
     showTemplate: Boolean = true,
 ) {
     val contentColor = MaterialTheme.colorScheme.onBackground
@@ -133,27 +134,32 @@ fun DollarNCanvas(
                 )
             }
 
-            if (showHints) {
+            if (showStart || showOrder) {
                 char.strokes.forEach { stroke ->
                     val screenX = (stroke.startOffset.x * scale) + offsetX
                     val screenY = (stroke.startOffset.y * scale) + offsetY
-                    val badgeCenter = Offset(screenX, screenY)
 
-                    drawCircle(
-                        color = badgeColor,
-                        radius = badgeSize.toPx(),
-                        center = badgeCenter
-                    )
+                    if (showStart) {
+                        val badgeCenter = Offset(screenX, screenY)
 
-                    val result = textMeasurer.measure((stroke.index + 1).toString())
-                    drawText(
-                        textLayoutResult = result,
-                        topLeft = Offset(
-                            x = screenX - (result.size.width / 2),
-                            y = screenY - (result.size.height / 2)
-                        ),
-                        color = onBadgeColor
-                    )
+                        drawCircle(
+                            color = badgeColor,
+                            radius = badgeSize.toPx(),
+                            center = badgeCenter
+                        )
+                    }
+
+                    if (showOrder) {
+                        val result = textMeasurer.measure((stroke.index + 1).toString())
+                        drawText(
+                            textLayoutResult = result,
+                            topLeft = Offset(
+                                x = screenX - (result.size.width / 2),
+                                y = screenY - (result.size.height / 2)
+                            ),
+                            color = onBadgeColor
+                        )
+                    }
                 }
             }
         }

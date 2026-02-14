@@ -49,8 +49,21 @@ fun rememberNavBackStack(
     configuration: SavedStateConfiguration,
     vararg elements: NavKey
 ): NavBackStack<NavKey> {
+    return rememberNavBackStack(
+        configuration = configuration,
+        key = null,
+        elements = elements
+    )
+}
+
+@Composable
+fun rememberNavBackStack(
+    configuration: SavedStateConfiguration,
+    key: Any?,
+    vararg elements: NavKey
+): NavBackStack<NavKey> {
     val baseBackStack = rememberNavBackStack(configuration, *elements)
-    return remember(baseBackStack) {
+    return remember(baseBackStack, key) {
         NavBackStack(baseBackStack)
     }
 }

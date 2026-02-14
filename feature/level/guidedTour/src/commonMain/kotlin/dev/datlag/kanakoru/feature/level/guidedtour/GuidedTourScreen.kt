@@ -47,10 +47,15 @@ fun GuidedTourScreen(
 
     LevelScaffold(
         title = { Text(text = "Guided Tour $currentStep / $totalStrokes") },
+        onClear = {
+            state.clear()
+            currentStep = 1
+            state.updateTarget(fullChar.takeStrokes(currentStep))
+        },
         onBack = onBack,
         canvasState = state,
         templateChar = currentVisibleChar,
         onFinish = onFinish,
-        showHints = false
+        showOrder = false
     )
 }

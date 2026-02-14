@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation3.runtime.NavKey
 import dev.datlag.inkraft.typeOf
 import dev.datlag.kanakoru.feature.level.guidedtour.navigation.GuidedTour
+import dev.datlag.kanakoru.feature.level.tracer.navigation.Tracer
 import dev.datlag.kanakoru.feature.level.trainingwheels.navigation.TrainingWheels
 import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.model.LevelNavKey
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 class LevelViewModel(
     private val character: JapaneseChar
@@ -17,7 +19,8 @@ class LevelViewModel(
 
     private val allLevels = persistentListOf(
         GuidedTour(character),
-        TrainingWheels(character)
+        TrainingWheels(character),
+        Tracer(character)
     )
 
     private val levelSequence = allLevels.filter { level ->
@@ -26,7 +29,7 @@ class LevelViewModel(
         } else {
             level.singleStrokeSupport
         }
-    }
+    }.toImmutableList()
 
     val startDestination = levelSequence.first()
 
