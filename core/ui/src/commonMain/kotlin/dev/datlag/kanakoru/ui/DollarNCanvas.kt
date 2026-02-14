@@ -17,8 +17,11 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.datlag.kanakoru.dollarn.DollarN
 import dev.datlag.kanakoru.dollarn.Point
@@ -35,23 +38,32 @@ fun DollarNCanvas(
     showStart: Boolean = true,
     showOrder: Boolean = true,
     showTemplate: Boolean = true,
-    staticStrokes: ImmutableList<CanvasChar.Stroke> = persistentListOf()
+    staticStrokes: ImmutableList<CanvasChar.Stroke> = persistentListOf(),
+    baseStrokeWidth: Dp = 18.dp
 ) {
+    val density = LocalDensity.current
     val contentColor = MaterialTheme.colorScheme.onBackground
     val drawingColor = MaterialTheme.colorScheme.tertiary
     val templateColor = MaterialTheme.colorScheme.surfaceContainer
     val badgeColor = MaterialTheme.colorScheme.primary
     val onBadgeColor = MaterialTheme.colorScheme.onPrimary
+
+    val strokeWidthPx = remember(baseStrokeWidth, density) {
+        with(density) { baseStrokeWidth.toPx() }
+    }
+    val badgeRadius = remember(strokeWidthPx) {
+        strokeWidthPx / 2F
+    }
+    val textSizeSp = remember(baseStrokeWidth, density) {
+        with(density) { (baseStrokeWidth * 0.8F).toSp() }
+    }
     val textMeasurer = rememberTextMeasurer()
-    val strokeStyle = remember {
+    val strokeStyle = remember(strokeWidthPx) {
         Stroke(
-            width = 20F,
+            width = strokeWidthPx,
             cap = StrokeCap.Round,
             join = StrokeJoin.Round
         )
-    }
-    val badgeSize = remember(strokeStyle) {
-        (strokeStyle.width / 2F).dp
     }
     val stateResult by state.lastResult.collectAsState()
     val drawingEnabled = remember(stateResult) {
@@ -77,6 +89,13 @@ fun DollarNCanvas(
         }
         val offsetY = remember(constraints.maxHeight, char.originalHeight, scale) {
             (constraints.maxHeight - (char.originalHeight * scale)) / 2
+        }
+        val templateStrokeStyle = remember(scale, strokeWidthPx) {
+            Stroke(
+                width = strokeWidthPx / scale,
+                cap = strokeStyle.cap,
+                join = strokeStyle.join
+            )
         }
 
         Canvas(
@@ -111,11 +130,7 @@ fun DollarNCanvas(
                         drawPath(
                             path = stroke.path,
                             color = templateColor,
-                            style = Stroke(
-                                width = strokeStyle.width / scale,
-                                cap = strokeStyle.cap,
-                                join = strokeStyle.join
-                            )
+                            style = templateStrokeStyle
                         )
                     }
                 }
@@ -130,11 +145,7 @@ fun DollarNCanvas(
                         drawPath(
                             path = stroke.path,
                             color = contentColor,
-                            style = Stroke(
-                                width = strokeStyle.width / scale,
-                                cap = strokeStyle.cap,
-                                join = strokeStyle.join
-                            )
+                            style = templateStrokeStyle
                         )
                     }
                 }
@@ -157,6 +168,11 @@ fun DollarNCanvas(
             }
 
             if (showStart || showOrder) {
+                val textStyle = TextStyle(
+                    fontSize = textSizeSp,
+                    color = onBadgeColor
+                )
+
                 char.strokes.forEach { stroke ->
                     val screenX = (stroke.startOffset.x * scale) + offsetX
                     val screenY = (stroke.startOffset.y * scale) + offsetY
@@ -166,13 +182,16 @@ fun DollarNCanvas(
 
                         drawCircle(
                             color = badgeColor,
-                            radius = badgeSize.toPx(),
+                            radius = badgeRadius,
                             center = badgeCenter
                         )
                     }
 
                     if (showOrder) {
-                        val result = textMeasurer.measure((stroke.index + 1).toString())
+                        val result = textMeasurer.measure(
+                            text = (stroke.index + 1).toString(),
+                            style = textStyle
+                        )
                         drawText(
                             textLayoutResult = result,
                             topLeft = Offset(
