@@ -38,6 +38,7 @@ kotlin {
             implementation(libs.serialization)
             implementation(libs.immutable)
             implementation(libs.navigation3)
+            implementation(libs.compose)
         }
     }
 }
