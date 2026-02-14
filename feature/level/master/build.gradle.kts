@@ -9,7 +9,7 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-val packageName = "dev.datlag.kanakoru.feature.level"
+val packageName = "dev.datlag.kanakoru.feature.level.master"
 
 kotlin {
     androidLibrary {
@@ -36,12 +36,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.bundles.feature)
-            api(projects.feature.level.navigation)
-            implementation(projects.feature.level.guidedTour)
-            implementation(projects.feature.level.trainingWheels)
-            implementation(projects.feature.level.tracer)
-            implementation(projects.feature.level.finisher)
-            implementation(projects.feature.level.master)
+            api(projects.feature.level.master.navigation)
             implementation(projects.core)
         }
 
@@ -55,7 +50,7 @@ compose.resources {
     publicResClass = false
     packageOfResClass = "$packageName.resources"
     generateResClass = auto
-    nameOfResClass = "LevelRes"
+    nameOfResClass = "MasterRes"
 }
 
 ktfmt { kotlinLangStyle() }

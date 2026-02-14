@@ -5,6 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import dev.datlag.inkraft.typeOf
 import dev.datlag.kanakoru.feature.level.finisher.navigation.Finisher
 import dev.datlag.kanakoru.feature.level.guidedtour.navigation.GuidedTour
+import dev.datlag.kanakoru.feature.level.master.navigation.Master
 import dev.datlag.kanakoru.feature.level.tracer.navigation.Tracer
 import dev.datlag.kanakoru.feature.level.trainingwheels.navigation.TrainingWheels
 import dev.datlag.kanakoru.model.JapaneseChar
@@ -22,7 +23,8 @@ class LevelViewModel(
         GuidedTour(character),
         TrainingWheels(character),
         Tracer(character),
-        Finisher(character)
+        Finisher(character),
+        Master(character)
     )
 
     private val levelSequence = allLevels.filter { level ->

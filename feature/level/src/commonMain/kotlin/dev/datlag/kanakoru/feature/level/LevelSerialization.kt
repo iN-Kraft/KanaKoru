@@ -4,6 +4,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.savedstate.serialization.SavedStateConfiguration
 import dev.datlag.kanakoru.feature.level.finisher.navigation.Finisher
 import dev.datlag.kanakoru.feature.level.guidedtour.navigation.GuidedTour
+import dev.datlag.kanakoru.feature.level.master.navigation.Master
 import dev.datlag.kanakoru.feature.level.tracer.navigation.Tracer
 import dev.datlag.kanakoru.feature.level.trainingwheels.navigation.TrainingWheels
 import kotlinx.serialization.modules.SerializersModule
@@ -18,6 +19,7 @@ object LevelSerialization {
             subclass(TrainingWheels::class)
             subclass(Tracer::class)
             subclass(Finisher::class)
+            subclass(Master::class)
         }
     }
 
