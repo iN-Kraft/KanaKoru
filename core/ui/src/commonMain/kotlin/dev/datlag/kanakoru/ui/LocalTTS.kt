@@ -1,6 +1,6 @@
 package dev.datlag.kanakoru.ui
 
 import androidx.compose.runtime.compositionLocalOf
-import nl.marc_apps.tts.TextToSpeechInstance
+import dev.datlag.kanakoru.ui.model.TextToSpeechManager
 
-val LocalTTS = compositionLocalOf<TextToSpeechInstance?> { null }
+val LocalTTS = compositionLocalOf<TextToSpeechManager> { error("No TextToSpeechManager initialized") }

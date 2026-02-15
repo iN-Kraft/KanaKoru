@@ -126,25 +126,9 @@ fun LevelScaffold(
 
             HorizontalFloatingToolbar(
                 expanded = true,
-                modifier = Modifier.align(Alignment.BottomCenter)
+                modifier = Modifier.align(Alignment.BottomCenter).padding(FloatingToolbarDefaults.ScreenOffset)
             ) {
                 val tts = LocalTTS.current
-                val japaneseVoices = remember(tts) {
-                    tts?.voices?.filter { voice ->
-                        val locale = Locale.forLanguageTag(voice.languageTag)
-                            ?: Locale(voice.language, voice.region ?: voice.language)
-
-                        locale.country is Japan
-                    }.orEmpty().toImmutableList()
-                }
-
-                LaunchedEffect(tts, japaneseVoices) {
-                    tts?.currentVoice = japaneseVoices.firstOrNull {
-                        it.isDefault
-                    } ?: japaneseVoices.firstOrNull {
-                        !it.isOnline
-                    } ?: japaneseVoices.firstOrNull { it.isOnline }
-                }
 
                 IconButton(
                     onClick = onUndo,
@@ -157,9 +141,9 @@ fun LevelScaffold(
                 }
                 FilledIconButton(
                     onClick = {
-                        tts?.enqueue(templateChar.char.toString(), clearQueue = true)
+                        tts.enqueue(templateChar.char.toString())
                     },
-                    enabled = tts != null,
+                    enabled = tts.isAvailable,
                     shapes = IconButtonDefaults.shapes()
                 ) {
                     Icon(
