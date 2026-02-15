@@ -1,11 +1,11 @@
 package dev.datlag.kanakoru.ui.model
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -15,6 +15,7 @@ import dev.datlag.kommons.locale.Locale
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import nl.marc_apps.tts.TextToSpeechEngine
 import nl.marc_apps.tts.TextToSpeechInstance
@@ -27,7 +28,7 @@ import nl.marc_apps.tts.rememberTextToSpeechOrNull
 class TextToSpeechManager(
     val googleTTS: TextToSpeechInstance?,
     val systemTTS: TextToSpeechInstance?
-) {
+) : AutoCloseable {
 
     var googleJapaneseVoices by mutableStateOf<ImmutableList<Voice>>(persistentListOf())
         private set
@@ -84,6 +85,11 @@ class TextToSpeechManager(
         }
     }
 
+    override fun close() {
+        googleTTS?.close()
+        systemTTS?.close()
+    }
+
     private fun selectBestVoice(list: List<Voice>): Voice? {
         if (list.isEmpty()) {
             return null
@@ -121,28 +127,32 @@ fun rememberTextToSpeechManager(): TextToSpeechManager {
         TextToSpeechManager(googleTTS, systemTTS)
     }
     val deviceOnline = remember { true }
+    var googleInitialized by remember { mutableStateOf(false) }
+    var systemInitialized by remember { mutableStateOf(false) }
 
     if (googleTTS != null) {
         LaunchedEffect(googleTTS, deviceOnline) {
-            combine(googleTTS.isWarmingUp, snapshotFlow { deviceOnline }) { warmingUp, online ->
-                warmingUp to online
-            }.collect { (warmingUp, online) ->
-                if (!warmingUp) {
-                    manager.updateGoogleVoices(online)
-                }
+            if (!googleInitialized) {
+                delay(2000)
             }
+            manager.updateGoogleVoices(deviceOnline)
+            googleInitialized = true
         }
     }
 
     if (systemTTS != null) {
         LaunchedEffect(systemTTS, deviceOnline) {
-            combine(systemTTS.isWarmingUp, snapshotFlow { deviceOnline }) { warmingUp, online ->
-                warmingUp to online
-            }.collect { (warmingUp, online) ->
-                if (!warmingUp) {
-                    manager.updateSystemVoices(online)
-                }
+            if (!systemInitialized) {
+                delay(2000)
             }
+            manager.updateSystemVoices(deviceOnline)
+            systemInitialized = true
+        }
+    }
+
+    DisposableEffect(manager) {
+        onDispose {
+            manager.close()
         }
     }
 
