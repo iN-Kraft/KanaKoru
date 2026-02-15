@@ -1,6 +1,8 @@
 package dev.datlag.kanakoru
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -15,22 +17,27 @@ import dev.datlag.kanakoru.ui.LocalTTS
 import dev.datlag.kanakoru.ui.common.rememberNavBackStack
 import dev.datlag.kanakoru.ui.model.rememberTextToSpeechManager
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun Root() {
     val backStack = rememberNavBackStack(NavSerialization.configuration, Home)
     val tts = rememberTextToSpeechManager()
 
-    CompositionLocalProvider(
-        LocalTTS provides tts
+    MaterialExpressiveTheme(
+        typography = Font.typography()
     ) {
-        NavDisplay(
-            modifier = Modifier.fillMaxSize(),
-            backStack = backStack,
-            entryProvider = entryProvider {
-                featureHome(backStack)
-                featureKana(backStack)
-                featureLevel(backStack)
-            }
-        )
+        CompositionLocalProvider(
+            LocalTTS provides tts
+        ) {
+            NavDisplay(
+                modifier = Modifier.fillMaxSize(),
+                backStack = backStack,
+                entryProvider = entryProvider {
+                    featureHome(backStack)
+                    featureKana(backStack)
+                    featureLevel(backStack)
+                }
+            )
+        }
     }
 }

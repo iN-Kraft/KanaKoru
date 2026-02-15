@@ -7,11 +7,13 @@ plugins {
     alias(libs.plugins.serialization)
 }
 
+val packageName = "dev.datlag.kanakoru"
+
 kotlin {
     androidLibrary {
         compileSdk = 36
         minSdk = 21
-        namespace = "dev.datlag.kanakoru"
+        namespace = packageName
 
         androidResources { enable = true }
     }
@@ -31,8 +33,10 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(libs.compose.resources)
             api(libs.compose.material3)
             api(libs.navigation3.ui)
+            api(libs.immutable)
             // api(libs.navigation3.viewmodel)
 
             api(libs.kodein.compose)
@@ -40,4 +44,11 @@ kotlin {
             api(projects.feature)
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "$packageName.resources"
+    generateResClass = auto
+    nameOfResClass = "AppRes"
 }
