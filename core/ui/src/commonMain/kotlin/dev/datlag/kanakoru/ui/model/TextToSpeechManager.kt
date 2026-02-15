@@ -130,19 +130,17 @@ fun rememberTextToSpeechManager(): TextToSpeechManager {
     val connectivity = rememberPlatformConnectivity {
         autoStart = true
     }
-    val deviceOnline = remember(connectivity) {
-        connectivity.isConnected
-    }
 
     if (googleTTS != null) {
-        LaunchedEffect(googleTTS, deviceOnline) {
-            manager.updateGoogleVoices(deviceOnline)
+        LaunchedEffect(googleTTS, connectivity.status) {
+            println("Connectivity: ${connectivity.status}")
+            manager.updateGoogleVoices(connectivity.isConnected)
         }
     }
 
     if (systemTTS != null) {
-        LaunchedEffect(systemTTS, deviceOnline) {
-            manager.updateSystemVoices(deviceOnline)
+        LaunchedEffect(systemTTS, connectivity.status) {
+            manager.updateSystemVoices(connectivity.isConnected)
         }
     }
 
