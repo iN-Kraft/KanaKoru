@@ -1,12 +1,21 @@
 package dev.datlag.kanakoru.ui.model
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import dev.datlag.kommons.locale.Japan
 import dev.datlag.kommons.locale.Locale
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.combine
 import nl.marc_apps.tts.TextToSpeechEngine
 import nl.marc_apps.tts.TextToSpeechInstance
 import nl.marc_apps.tts.Voice
@@ -14,39 +23,62 @@ import nl.marc_apps.tts.experimental.ExperimentalVoiceApi
 import nl.marc_apps.tts.rememberTextToSpeechOrNull
 
 @OptIn(ExperimentalVoiceApi::class)
+@Stable
 class TextToSpeechManager(
     val googleTTS: TextToSpeechInstance?,
-    val systemTTS: TextToSpeechInstance?,
-    val deviceOnline: Boolean
+    val systemTTS: TextToSpeechInstance?
 ) {
 
-    val googleJapaneseVoices by derivedStateOf {
-        googleTTS?.voices.orEmpty().filter {
-            isJapanese(it)
-        }.toImmutableList()
-    }
+    var googleJapaneseVoices by mutableStateOf<ImmutableList<Voice>>(persistentListOf())
+        private set
 
-    val systemJapaneseVoices by derivedStateOf {
-        systemTTS?.voices.orEmpty().filter {
-            isJapanese(it)
-        }.toImmutableList()
-    }
+    var systemJapaneseVoices by mutableStateOf<ImmutableList<Voice>>(persistentListOf())
+        private set
+
+    val activeGoogleVoice by derivedStateOf { selectBestVoice(googleJapaneseVoices) }
+    val activeSystemVoice by derivedStateOf { selectBestVoice(systemJapaneseVoices) }
 
     val isAvailable: Boolean by derivedStateOf {
-        googleJapaneseVoices.isNotEmpty() || systemJapaneseVoices.isNotEmpty()
+        activeGoogleVoice != null || activeSystemVoice != null
+    }
+
+    fun updateGoogleVoices(deviceOnline: Boolean) {
+        if (googleTTS == null) {
+            return
+        }
+
+        googleJapaneseVoices = googleTTS.voices.filter {
+            isJapanese(it, deviceOnline)
+        }.toImmutableList()
+    }
+
+    fun updateSystemVoices(deviceOnline: Boolean) {
+        if (systemTTS == null) {
+            return
+        }
+
+        systemJapaneseVoices = systemTTS.voices.filter {
+            isJapanese(it, deviceOnline)
+        }.toImmutableList()
     }
 
     fun enqueue(text: String, clearQueue: Boolean = true) {
-        val googleVoice = selectBestVoice(googleJapaneseVoices)
+        val googleVoice = activeGoogleVoice
         if (googleVoice != null && googleTTS != null) {
-            googleTTS.currentVoice = googleVoice
+            if (googleTTS.currentVoice != googleVoice) {
+                googleTTS.currentVoice = googleVoice
+            }
+
             googleTTS.enqueue(text, clearQueue)
             return
         }
 
-        val systemVoice = selectBestVoice(systemJapaneseVoices)
+        val systemVoice = activeSystemVoice
         if (systemVoice != null && systemTTS != null) {
-            systemTTS.currentVoice = systemVoice
+            if (systemTTS.currentVoice != systemVoice) {
+                systemTTS.currentVoice = systemVoice
+            }
+
             systemTTS.enqueue(text, clearQueue)
             return
         }
@@ -59,18 +91,10 @@ class TextToSpeechManager(
 
         return list.firstOrNull { voice ->
             voice.isDefault
-        } ?: if (deviceOnline) {
-            list.firstOrNull { voice ->
-                voice.isOnline
-            }
-        } else {
-            list.firstOrNull { voice ->
-                !voice.isOnline
-            }
         } ?: list.firstOrNull()
     }
 
-    private fun isJapanese(voice: Voice, ): Boolean {
+    private fun isJapanese(voice: Voice, deviceOnline: Boolean): Boolean {
         if (!deviceOnline && voice.isOnline) {
             return false
         }
@@ -93,8 +117,34 @@ class TextToSpeechManager(
 fun rememberTextToSpeechManager(): TextToSpeechManager {
     val googleTTS = rememberTextToSpeechOrNull(TextToSpeechEngine.Google)
     val systemTTS = rememberTextToSpeechOrNull(TextToSpeechEngine.SystemDefault)
-
-    return remember(googleTTS, systemTTS) {
-        TextToSpeechManager(googleTTS, systemTTS, deviceOnline = true)
+    val manager =  remember(googleTTS, systemTTS) {
+        TextToSpeechManager(googleTTS, systemTTS)
     }
+    val deviceOnline = remember { true }
+
+    if (googleTTS != null) {
+        LaunchedEffect(googleTTS, deviceOnline) {
+            combine(googleTTS.isWarmingUp, snapshotFlow { deviceOnline }) { warmingUp, online ->
+                warmingUp to online
+            }.collect { (warmingUp, online) ->
+                if (!warmingUp) {
+                    manager.updateGoogleVoices(online)
+                }
+            }
+        }
+    }
+
+    if (systemTTS != null) {
+        LaunchedEffect(systemTTS, deviceOnline) {
+            combine(systemTTS.isWarmingUp, snapshotFlow { deviceOnline }) { warmingUp, online ->
+                warmingUp to online
+            }.collect { (warmingUp, online) ->
+                if (!warmingUp) {
+                    manager.updateSystemVoices(online)
+                }
+            }
+        }
+    }
+
+    return manager
 }
