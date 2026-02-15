@@ -10,6 +10,7 @@ import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.ui.LevelScaffold
 import dev.datlag.kanakoru.ui.model.CanvasChar
 import dev.datlag.kanakoru.ui.model.rememberDollarNCanvasState
+import kotlin.math.max
 
 @Composable
 fun GuidedTourScreen(
@@ -47,6 +48,11 @@ fun GuidedTourScreen(
 
     LevelScaffold(
         title = { Text(text = "Guided Tour $currentStep / $totalStrokes") },
+        onUndo = {
+            state.undoLastStroke()
+            currentStep = max(1, currentStep - 1)
+            state.updateTarget(fullChar.takeStrokes(currentStep))
+        },
         onClear = {
             state.clear()
             currentStep = 1

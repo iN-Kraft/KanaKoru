@@ -41,11 +41,11 @@ fun FinisherScreen(
         showOrder = false,
         showStart = false,
         showTemplate = false
-    ) { padding ->
+    ) {
         DollarNCanvas(
             char = activeChar,
             state = state,
-            modifier = Modifier.fillMaxSize().padding(padding),
+            modifier = Modifier.fillMaxSize(),
             staticStrokes = staticChar.strokes,
             showOrder = false,
             showStart = false,

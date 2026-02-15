@@ -52,6 +52,8 @@ kotlin {
             implementation(libs.kodein.compose.runtime)
             implementation(libs.icons)
             implementation(libs.inkraft.cache)
+            implementation(libs.inkraft.locale)
+            api(libs.text.to.speech)
         }
 
         commonTest.dependencies {

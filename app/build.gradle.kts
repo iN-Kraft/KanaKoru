@@ -38,6 +38,7 @@ kotlin {
             api(libs.kodein.compose)
             api(projects.core)
             api(projects.feature)
+            api(libs.text.to.speech)
         }
     }
 }

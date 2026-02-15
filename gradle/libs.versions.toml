@@ -26,6 +26,7 @@ navigation3-ui = "1.0.0-alpha06"
 openrewrite = "7.26.0"
 sentry = "0.24.0"
 serialization = "1.10.0"
+tts = "3.0.0"
 versions = "0.53.0"
 
 [libraries]
@@ -57,6 +58,7 @@ desugar = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref 
 icons = { group = "com.composables", name = "icons-material-symbols-rounded-cmp", version.ref = "icons" }
 immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "immutable" }
 inkraft-cache = { group = "dev.datlag.kommons", name = "cache", version.ref = "iNKraft-kommons" }
+inkraft-locale = { group = "dev.datlag.kommons", name = "locale", version.ref = "iNKraft-kommons" }
 inkraft-utils = { group = "dev.datlag.inkraft", name = "utils", version.ref = "iNKraft-utils" }
 kodein = { group = "org.kodein.di", name = "kodein-di", version.ref = "kodein" }
 kodein-compose = { group = "org.kodein.di", name = "kodein-di-framework-compose", version.ref = "kodein" }
@@ -72,6 +74,7 @@ reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.
 sentry = { group = "io.sentry", name = "sentry-kotlin-multiplatform", version.ref = "sentry" }
 serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
 test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+text-to-speech = { group = "nl.marc-apps", name = "tts-compose", version.ref = "tts" }
 
 [bundles]
 feature = [ "arrow", "coil-compose", "compose-material3", "compose-resources", "compose-ui-tooling", "datetime", "icons", "immutable", "inkraft-utils", "kodein-compose-runtime", "lifecycle", "lifecycle-viewmodel", "navigation3-ui" ]
