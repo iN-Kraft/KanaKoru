@@ -6,6 +6,7 @@ android-material = "1.13.0"
 arrow = "2.2.1.1"
 coil = "3.3.0"
 compose = "1.10.1"
+connectivity = "2.4.1"
 coroutines = "1.10.2"
 datetime = "0.7.1"
 desugar = "2.1.5"
@@ -49,6 +50,9 @@ compose-material3 = { group = "org.jetbrains.compose.material3", name = "materia
 compose-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "compose" }
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "compose" }
 compose-ui-tooling = { group = "org.jetbrains.compose.ui", name = "ui-tooling-preview", version.ref = "compose" }
+connectivity = { group = "dev.jordond.connectivity", name = "connectivity-core", version.ref = "connectivity" }
+connectivity-compose = { group = "dev.jordond.connectivity", name = "connectivity-compose", version.ref = "connectivity" }
+connectivity-compose-mobile = { group = "dev.jordond.connectivity", name = "connectivity-compose-device", version.ref = "connectivity" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutines-js = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core-js", version.ref = "coroutines" }

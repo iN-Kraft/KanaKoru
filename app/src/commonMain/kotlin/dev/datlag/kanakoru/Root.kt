@@ -14,8 +14,6 @@ import dev.datlag.kanakoru.feature.level.featureLevel
 import dev.datlag.kanakoru.ui.LocalTTS
 import dev.datlag.kanakoru.ui.common.rememberNavBackStack
 import dev.datlag.kanakoru.ui.model.rememberTextToSpeechManager
-import nl.marc_apps.tts.TextToSpeechEngine
-import nl.marc_apps.tts.rememberTextToSpeechOrNull
 
 @Composable
 fun Root() {

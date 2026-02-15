@@ -45,6 +45,7 @@ kotlin {
             implementation(libs.coil.network)
             implementation(libs.coil.svg)
             implementation(libs.immutable)
+            implementation(libs.coroutines)
 
             implementation(projects.core.kodein)
             implementation(projects.core.model)
@@ -53,12 +54,25 @@ kotlin {
             implementation(libs.icons)
             implementation(libs.inkraft.cache)
             implementation(libs.inkraft.locale)
-            api(libs.text.to.speech)
+            implementation(libs.text.to.speech)
+            implementation(libs.connectivity.compose)
         }
 
         commonTest.dependencies {
             implementation(libs.coroutines.test)
             implementation(libs.test)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.connectivity.compose.mobile)
+        }
+
+        appleMain.dependencies {
+            implementation(libs.connectivity.compose.mobile)
+        }
+
+        webMain.dependencies {
+            implementation(libs.connectivity)
         }
     }
 }

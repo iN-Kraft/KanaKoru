@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import dev.datlag.kanakoru.ui.common.rememberPlatformConnectivity
 import dev.datlag.kommons.locale.Japan
 import dev.datlag.kommons.locale.Locale
 import kotlinx.collections.immutable.ImmutableList
@@ -126,27 +127,22 @@ fun rememberTextToSpeechManager(): TextToSpeechManager {
     val manager =  remember(googleTTS, systemTTS) {
         TextToSpeechManager(googleTTS, systemTTS)
     }
-    val deviceOnline = remember { true }
-    var googleInitialized by remember { mutableStateOf(false) }
-    var systemInitialized by remember { mutableStateOf(false) }
+    val connectivity = rememberPlatformConnectivity {
+        autoStart = true
+    }
+    val deviceOnline = remember(connectivity) {
+        connectivity.isConnected
+    }
 
     if (googleTTS != null) {
         LaunchedEffect(googleTTS, deviceOnline) {
-            if (!googleInitialized) {
-                delay(2000)
-            }
             manager.updateGoogleVoices(deviceOnline)
-            googleInitialized = true
         }
     }
 
     if (systemTTS != null) {
         LaunchedEffect(systemTTS, deviceOnline) {
-            if (!systemInitialized) {
-                delay(2000)
-            }
             manager.updateSystemVoices(deviceOnline)
-            systemInitialized = true
         }
     }
 

@@ -19,8 +19,13 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.savedstate.serialization.SavedStateConfiguration
 import dev.datlag.kanakoru.ui.Constants
 import dev.datlag.kanakoru.ui.NavBackStack
+import dev.jordond.connectivity.Connectivity
+import dev.jordond.connectivity.ConnectivityOptions
+import dev.jordond.connectivity.compose.ConnectivityState
+import dev.jordond.connectivity.compose.rememberConnectivityState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.CoroutineScope
 
 fun Color.toHexString(): String {
     val a = Constants.colorFloatToInt(this.alpha)
@@ -123,3 +128,8 @@ fun LazyGridScope.header(
 ) {
     item(span = { GridItemSpan(this.maxLineSpan) }, content = content)
 }
+
+@Composable
+expect fun rememberPlatformConnectivity(
+    block: ConnectivityOptions.Builder.() -> Unit
+): ConnectivityState
