@@ -73,6 +73,7 @@ kotlin {
 
         webMain.dependencies {
             implementation(libs.connectivity)
+            implementation(libs.browser)
         }
     }
 }

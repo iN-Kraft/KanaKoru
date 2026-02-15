@@ -3,6 +3,7 @@ package dev.datlag.kanakoru.ui.common
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import dev.jordond.connectivity.Connectivity
 import dev.jordond.connectivity.ConnectivityOptions
 import dev.jordond.connectivity.compose.ConnectivityState
 import dev.jordond.connectivity.compose.rememberConnectivityState
@@ -16,8 +17,12 @@ actual fun rememberPlatformConnectivity(
     }
     val scope = rememberCoroutineScope()
     val connectivity = remember(options, scope) {
-        WebConnectivity(scope, options)
+        Connectivity(
+            provider = WebConnectivityProvider(),
+            options = options,
+            scope = scope
+        )
     }
 
-    return rememberConnectivityState(connectivity, scope)
+    return rememberConnectivityState(connectivity)
 }

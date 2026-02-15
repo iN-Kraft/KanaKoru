@@ -4,6 +4,7 @@ agp = "9.0.1"
 android-core = "1.17.0"
 android-material = "1.13.0"
 arrow = "2.2.1.1"
+browser = "0.5.0"
 coil = "3.3.0"
 compose = "1.10.1"
 connectivity = "2.4.1"
@@ -40,6 +41,7 @@ arrow-coroutines = { group = "io.arrow-kt", name = "arrow-fx-coroutines", versio
 arrow-optics = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "arrow" }
 arrow-resilience = { group = "io.arrow-kt", name = "arrow-resilience", version.ref = "arrow" }
 arrow-serialization = { group = "io.arrow-kt", name = "arrow-core-serialization", version.ref = "arrow" }
+browser = { group = "org.jetbrains.kotlinx", name = "kotlinx-browser", version.ref = "browser" }
 coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
