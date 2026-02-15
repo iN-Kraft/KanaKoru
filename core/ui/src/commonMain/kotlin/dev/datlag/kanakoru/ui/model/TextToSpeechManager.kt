@@ -133,7 +133,6 @@ fun rememberTextToSpeechManager(): TextToSpeechManager {
 
     if (googleTTS != null) {
         LaunchedEffect(googleTTS, connectivity.status) {
-            println("Connectivity: ${connectivity.status}")
             manager.updateGoogleVoices(connectivity.isConnected)
         }
     }

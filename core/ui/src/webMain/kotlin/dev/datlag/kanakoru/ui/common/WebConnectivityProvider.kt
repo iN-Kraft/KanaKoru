@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import org.w3c.dom.Navigator
 import org.w3c.dom.events.Event
-import org.w3c.dom.events.EventListener
 
 class WebConnectivityProvider : ConnectivityProvider {
     override fun monitor(): Flow<Connectivity.Status> = callbackFlow {
@@ -16,10 +15,8 @@ class WebConnectivityProvider : ConnectivityProvider {
 
         trySend(getStatus(navigator))
 
-        val statusListener = object : EventListener {
-            override fun handleEvent(event: Event) {
-                trySend(getStatus(navigator))
-            }
+        val statusListener: (Event) -> Unit = {
+            trySend(getStatus(navigator))
         }
 
         window.addEventListener("online", statusListener)
