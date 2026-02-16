@@ -54,7 +54,10 @@ fun HomeScreen(
                 title = {
                     val greeting by viewModel.greeting.collectAsState()
 
-                    Text(text = stringResource(greeting))
+                    Text(
+                        text = stringResource(greeting),
+                        fontWeight = FontWeight.Bold
+                    )
                 },
                 subtitle = {
                     Text(text = stringResource(HomeRes.string.ready_to_learn))

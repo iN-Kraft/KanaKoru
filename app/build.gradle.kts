@@ -37,11 +37,18 @@ kotlin {
             api(libs.compose.material3)
             api(libs.navigation3.ui)
             api(libs.immutable)
-            // api(libs.navigation3.viewmodel)
+            api(libs.inkraft.utils)
 
             api(libs.kodein.compose)
             api(projects.core)
             api(projects.feature)
+        }
+
+        val skikoMain by creating {
+            dependsOn(commonMain.get())
+
+            appleMain.orNull?.dependsOn(this)
+            webMain.orNull?.dependsOn(this)
         }
     }
 }

@@ -22,9 +22,11 @@ import dev.datlag.kanakoru.ui.model.rememberTextToSpeechManager
 fun Root() {
     val backStack = rememberNavBackStack(NavSerialization.configuration, Home)
     val tts = rememberTextToSpeechManager()
+    val defaultFont = Font.inter()
+    val emphasizedFont = Font.googleSansFlex()
 
     MaterialExpressiveTheme(
-        typography = Font.typography()
+        typography = defaultFont?.let { Font.typography(it, emphasizedFont) }
     ) {
         CompositionLocalProvider(
             LocalTTS provides tts
