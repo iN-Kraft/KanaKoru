@@ -31,6 +31,7 @@ kotlin {
             implementation(libs.ktor.js)
             implementation(projects.app)
             implementation(libs.immutable)
+            implementation(libs.inkraft.utils)
         }
     }
 }
