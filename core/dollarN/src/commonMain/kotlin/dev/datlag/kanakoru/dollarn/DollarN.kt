@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 class DollarN(
@@ -208,10 +209,28 @@ class DollarN(
         val strokeCount: Int
     )
 
+    @Serializable
     data class Result(
         val key: Char,
         val score: Float
-    )
+    ) {
+
+        val isSuccess: Boolean = score >= SUCCESS_THRESHOLD
+        val displayScore: Int = run {
+            if (score < 0.8F) {
+                return@run (score * 100F).roundToInt()
+            }
+
+            val ceiling = 0.94F
+            val progress = (score - SUCCESS_THRESHOLD) / (ceiling - SUCCESS_THRESHOLD)
+            val boosted = 80F + (progress * 20F)
+            return@run boosted.roundToInt().coerceAtMost(100)
+        }
+
+        companion object {
+            private const val SUCCESS_THRESHOLD = 0.8F
+        }
+    }
 
     @Serializable
     sealed interface Error {

@@ -34,7 +34,7 @@ fun GuidedTourScreen(
         key = fullChar,
         onResult = { either ->
             either.onRight { result ->
-                if (result.score > 0.85F) {
+                if (result.isSuccess) {
                     if (currentStep < totalStrokes) {
                         currentStep++
                         updateTarget(fullChar.takeStrokes(currentStep))
