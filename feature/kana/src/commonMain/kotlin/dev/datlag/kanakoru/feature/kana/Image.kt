@@ -2,25 +2,22 @@ package dev.datlag.kanakoru.feature.kana
 
 import dev.datlag.inkraft.INKraft
 import dev.datlag.kanakoru.feature.kana.resources.KanaRes
+import dev.datlag.kanakoru.ui.SVGImage
 
 internal object Image {
 
+    private const val SVG_PATH = "files"
+
     val workInProgress by lazy {
-        getUri("files/undraw_work-in-progress.svg")
+        SVGImage.getUri(SVG_PATH / "undraw_work-in-progress.svg", KanaRes::getUri)
     }
 
     val aroundTheWorld by lazy {
-        getUri("files/undraw_around-the-world.svg")
+        SVGImage.getUri(SVG_PATH / "undraw_around-the-world.svg", KanaRes::getUri)
     }
 
-    private fun getUri(path: String): String {
-        val defaultUri = KanaRes.getUri(path)
-
-        if (!INKraft.Platform.isWeb) {
-            return defaultUri
-        }
-
-        return defaultUri.replace("index\\.html\\./".toRegex(), "")
+    private operator fun String.div(other: String): String {
+        return "$this/$other"
     }
 
 }

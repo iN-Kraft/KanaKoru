@@ -54,6 +54,7 @@ kotlin {
             implementation(libs.icons)
             implementation(libs.inkraft.cache)
             implementation(libs.inkraft.locale)
+            implementation(libs.inkraft.utils)
             implementation(libs.text.to.speech)
             implementation(libs.connectivity.compose)
         }
