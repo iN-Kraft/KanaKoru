@@ -115,6 +115,7 @@ fun HomeScreen(
                         ColoredSVG(
                             modifier = Modifier.fillMaxSize(),
                             model = if (isSystemInDarkTheme()) Image.dreamerDark else Image.dreamerLight,
+                            placeholderRegex = "".toRegex(),
                             contentDescription = null,
                             alignment = Alignment.Center,
                             contentScale = ContentScale.FillWidth
@@ -173,6 +174,7 @@ fun HomeScreen(
                         ColoredSVG(
                             modifier = Modifier.fillMaxSize(),
                             model = if (isSystemInDarkTheme()) Image.relaxingAtHomeDark else Image.relaxingAtHomeLight,
+                            placeholderRegex = "".toRegex(),
                             contentDescription = null,
                             alignment = Alignment.Center,
                             contentScale = ContentScale.FillWidth

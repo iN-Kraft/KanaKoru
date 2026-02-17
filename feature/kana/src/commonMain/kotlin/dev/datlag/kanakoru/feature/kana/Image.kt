@@ -16,6 +16,22 @@ internal object Image {
         SVGImage.getUri(SVG_PATH / "undraw_around-the-world.svg", KanaRes::getUri)
     }
 
+    val bookLoverLight by lazy {
+        SVGImage.getUri(SVG_PATH / "workout_light.svg", KanaRes::getUri)
+    }
+
+    val bookLoverDark by lazy {
+        SVGImage.getUri(SVG_PATH / "workout_dark.svg", KanaRes::getUri)
+    }
+
+    val hikingLight by lazy {
+        SVGImage.getUri(SVG_PATH / "hiking_light.svg", KanaRes::getUri)
+    }
+
+    val hikingDark by lazy {
+        SVGImage.getUri(SVG_PATH / "hiking_dark.svg", KanaRes::getUri)
+    }
+
     private operator fun String.div(other: String): String {
         return "$this/$other"
     }

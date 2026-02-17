@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -98,34 +99,23 @@ fun KanaScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             header {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    val background = if (isSystemInDarkTheme()) {
-                        MaterialTheme.colorScheme.surfaceBright
-                    } else {
-                        MaterialTheme.colorScheme.surfaceDim
-                    }
-
-                    ColoredSVG(
-                        modifier = Modifier
-                            .size(200.dp)
-                            .clip(MaterialShapes.Cookie12Sided.toShape())
-                            .background(background),
-                        model = when (type) {
-                            is Kana.Hiragana -> Image.workInProgress
-                            is Kana.Katakana -> Image.aroundTheWorld
-                        },
-                        contentDescription = null,
-                        fallback = rememberAsyncImagePainter(
-                            Image.workInProgress
-                        ),
-                        onError = { state ->
-                            state.result.throwable.printStackTrace()
+                ColoredSVG(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
+                    placeholderRegex = "".toRegex(),
+                    model = when (type) {
+                        is Kana.Hiragana -> if (isSystemInDarkTheme()) {
+                            Image.bookLoverDark
+                        } else {
+                            Image.bookLoverLight
                         }
-                    )
-                }
+                        is Kana.Katakana -> if (isSystemInDarkTheme()) {
+                            Image.hikingDark
+                        } else {
+                            Image.hikingLight
+                        }
+                    },
+                    contentDescription = null
+                )
             }
             header {
                 Text(
