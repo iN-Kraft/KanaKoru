@@ -29,6 +29,7 @@ import coil3.memory.MemoryCache
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import coil3.request.crossfade
 import coil3.svg.SvgDecoder
+import dev.datlag.kanakoru.Color
 import dev.datlag.kanakoru.Root
 import dev.datlag.kanakoru.core.CoreModule
 import io.ktor.client.HttpClient
@@ -90,7 +91,7 @@ fun main() {
             LocalDI provides di
         ) {
             MaterialExpressiveTheme(
-                colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
+                colorScheme = if (isSystemInDarkTheme()) Color.darkScheme else Color.lightScheme
             ) {
                 Crossfade(
                     targetState = canShowRoot,

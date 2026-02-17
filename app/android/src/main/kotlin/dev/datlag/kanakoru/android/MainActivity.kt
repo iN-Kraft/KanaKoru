@@ -39,28 +39,7 @@ class MainActivity : ComponentActivity(), DIAware {
             CompositionLocalProvider(
                 LocalDI provides di
             ) {
-                MaterialExpressiveTheme(
-                    colorScheme = systemColorScheme()
-                ) {
-                    Root()
-                }
-            }
-        }
-    }
-
-    @Composable
-    private fun systemColorScheme(): ColorScheme {
-        return if (isSystemInDarkTheme()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                dynamicDarkColorScheme(this)
-            } else {
-                darkColorScheme()
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                dynamicLightColorScheme(this)
-            } else {
-                lightColorScheme()
+                Root()
             }
         }
     }

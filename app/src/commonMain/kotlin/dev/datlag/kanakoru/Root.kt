@@ -1,5 +1,6 @@
 package dev.datlag.kanakoru
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialExpressiveTheme
@@ -26,6 +27,7 @@ fun Root() {
     val emphasizedFont = Font.googleSansFlex()
 
     MaterialExpressiveTheme(
+        colorScheme = if (isSystemInDarkTheme()) Color.darkScheme else Color.lightScheme,
         typography = defaultFont?.let { Font.typography(it, emphasizedFont) }
     ) {
         CompositionLocalProvider(
