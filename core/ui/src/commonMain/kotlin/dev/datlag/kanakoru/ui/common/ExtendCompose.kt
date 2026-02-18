@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.LazyGridItemScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
@@ -133,3 +134,6 @@ fun LazyGridScope.header(
 expect fun rememberPlatformConnectivity(
     block: ConnectivityOptions.Builder.() -> Unit
 ): ConnectivityState
+
+@Composable
+expect fun calculateWindowSizeClass(): WindowSizeClass

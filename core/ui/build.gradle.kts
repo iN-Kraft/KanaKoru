@@ -57,6 +57,8 @@ kotlin {
             implementation(libs.inkraft.utils)
             implementation(libs.text.to.speech)
             implementation(libs.connectivity.compose)
+            implementation(libs.window)
+            implementation(libs.window.size)
         }
 
         commonTest.dependencies {
@@ -66,6 +68,7 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.connectivity.compose.mobile)
+            implementation(libs.activity.compose)
         }
 
         appleMain.dependencies {

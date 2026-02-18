@@ -24,6 +24,32 @@ data class CanvasChar(
 
     val points = strokes.map { it.points }.toImmutableList()
 
+    val contentSize: Float by lazy {
+        if (strokes.isEmpty()) {
+            return@lazy 0F
+        }
+
+        var minX = Float.POSITIVE_INFINITY
+        var maxX = Float.NEGATIVE_INFINITY
+        var minY = Float.POSITIVE_INFINITY
+        var maxY = Float.NEGATIVE_INFINITY
+
+        strokes.forEach { stroke ->
+            val bounds = stroke.path.getBounds()
+            if (bounds.left < minX) minX = bounds.left
+            if (bounds.right > maxX) maxX = bounds.right
+            if (bounds.top < minY) minY = bounds.top
+            if (bounds.bottom > maxY) maxY = bounds.bottom
+        }
+
+        val width = if (maxX >= minX) maxX - minX else 0F
+        val height = if (maxY >= minY) maxY - minY else 0F
+
+        maxOf(width, height).takeUnless {
+            it == Float.POSITIVE_INFINITY || it == Float.NEGATIVE_INFINITY
+        } ?: 0F
+    }
+
     fun takeStrokes(count: Int): CanvasChar {
         val safeCount = count.coerceIn(0, strokes.size)
 
