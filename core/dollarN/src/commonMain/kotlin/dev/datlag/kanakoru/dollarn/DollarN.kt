@@ -8,6 +8,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -21,6 +22,7 @@ class DollarN(
     private val squareSize = 250F
     private val origin = Point(0F, 0F)
     private val smallStrokeThreshold = 175F
+    private val sizeMatchThresholdRatio = 0.8F
 
     private val templates: ImmutableList<Template> = templates.map { (key, strokeList) ->
         Template(
@@ -36,7 +38,8 @@ class DollarN(
     context(_: Raise<Error>)
     fun recognize(
         rawStrokes: List<List<Point>>,
-        sameCount: Boolean = true
+        sameCount: Boolean = true,
+        forcedSize: Float? = null
     ): Result {
         ensure(templates.isNotEmpty()) {
             raise(Error.NoTemplateProvided)
@@ -59,8 +62,20 @@ class DollarN(
 
         val rawBox = boundingBox(combinedRaw)
         val rawDiagonal = sqrt(rawBox.width * rawBox.width + rawBox.height * rawBox.height)
-        val isSmallInput = rawDiagonal < smallStrokeThreshold
+        if (forcedSize != null && forcedSize > 0) {
+            val rawMaxDim = max(rawBox.width, rawBox.height)
+            val minAllowed = forcedSize * sizeMatchThresholdRatio
+            ensure(rawMaxDim >= minAllowed) {
+                raise(Error.InputSizeMismatch.TooSmall(minAllowed, rawMaxDim))
+            }
 
+            val maxAllowed = forcedSize * (1F + abs(1F - sizeMatchThresholdRatio))
+            ensure(rawMaxDim <= maxAllowed) {
+                raise(Error.InputSizeMismatch.TooLarge(maxAllowed, rawMaxDim))
+            }
+        }
+
+        val isSmallInput = rawDiagonal < smallStrokeThreshold
         val points = normalize(rawStrokes, isSmallInput)
         val (bestTemplate, bestDistance) = templates.map { template ->
             template to pathDistance(points, template.points)
@@ -250,6 +265,16 @@ class DollarN(
             @Transient
             val hasTooManyStrokes: Boolean = actual > expected
 
+        }
+
+        @Serializable
+        sealed interface InputSizeMismatch : Error {
+
+            @Serializable
+            data class TooSmall(val expectedMin: Float, val actual: Float) : InputSizeMismatch
+
+            @Serializable
+            data class TooLarge(val expectedMax: Float, val actual: Float) : InputSizeMismatch
         }
     }
 

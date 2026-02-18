@@ -58,6 +58,7 @@ class DollarNCanvasState(
     val lastResult = _lastResult.asStateFlow()
 
     private var calculationJob: Job? = null
+    private var templateSize: Float? = null
 
     fun onDragStart(startPoint: Point) {
         _currentPoints.clear()
@@ -124,6 +125,11 @@ class DollarNCanvasState(
         }
     }
 
+    fun updateTemplateSize(value: Float?) {
+        templateSize = value
+        calculateResult()
+    }
+
     private fun mutatePath(block: Path.() -> Unit) {
         block(currentPath)
         currentPathVersion++
@@ -139,7 +145,7 @@ class DollarNCanvasState(
             ensureActive()
 
             val result = either {
-                recognizerSnapshot.recognize(pointsSnapshot)
+                recognizerSnapshot.recognize(pointsSnapshot, forcedSize = templateSize)
             }.also { updated ->
                 if (isActive) {
                     _lastResult.emit(updated)
