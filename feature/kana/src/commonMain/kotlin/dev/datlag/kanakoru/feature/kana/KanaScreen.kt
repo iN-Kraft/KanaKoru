@@ -118,10 +118,11 @@ fun KanaScreen(
         if (isLandscape) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(innerPadding)
                     .padding(horizontal = 24.dp),
-                horizontalArrangement = Arrangement.spacedBy(32.dp)
+                horizontalArrangement = Arrangement.spacedBy(32.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
                     modifier = Modifier
@@ -150,9 +151,8 @@ fun KanaScreen(
         } else {
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentPadding = PaddingValues(16.dp),
+                    .fillMaxSize(),
+                contentPadding = innerPadding.merge(PaddingValues(16.dp)),
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 item {
