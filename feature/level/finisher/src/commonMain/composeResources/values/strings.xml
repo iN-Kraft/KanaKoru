@@ -1,0 +1,4 @@
+<resources>
+    <string name="level_title">Stroke Completion</string>
+    <string name="level_subtitle">Finish the character by drawing the missing strokes.</string>
+</resources>

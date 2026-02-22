@@ -6,11 +6,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import dev.datlag.kanakoru.feature.level.finisher.resources.FinisherRes
+import dev.datlag.kanakoru.feature.level.finisher.resources.level_subtitle
+import dev.datlag.kanakoru.feature.level.finisher.resources.level_title
 import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.ui.DollarNCanvas
 import dev.datlag.kanakoru.ui.LevelScaffold
 import dev.datlag.kanakoru.ui.model.CanvasChar
 import dev.datlag.kanakoru.ui.model.rememberDollarNCanvasState
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.roundToInt
 
 @Composable
@@ -33,7 +37,8 @@ fun FinisherScreen(
     ) { }
 
     LevelScaffold(
-        title = { Text("Finisher") },
+        title = { Text(text = stringResource(FinisherRes.string.level_title)) },
+        subtitle = { Text(text = stringResource(FinisherRes.string.level_subtitle)) },
         onBack = onBack,
         canvasState = state,
         templateChar = activeChar,

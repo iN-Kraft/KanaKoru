@@ -6,10 +6,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import dev.datlag.kanakoru.feature.level.guidedTour.resources.GuidedTourRes
+import dev.datlag.kanakoru.feature.level.guidedTour.resources.level_subtitle
+import dev.datlag.kanakoru.feature.level.guidedTour.resources.level_title
 import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.ui.LevelScaffold
 import dev.datlag.kanakoru.ui.model.CanvasChar
 import dev.datlag.kanakoru.ui.model.rememberDollarNCanvasState
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.max
 
 @Composable
@@ -47,7 +51,8 @@ fun GuidedTourScreen(
     )
 
     LevelScaffold(
-        title = { Text(text = "Guided Tour $currentStep / $totalStrokes") },
+        title = { Text(text = stringResource(GuidedTourRes.string.level_title)) },
+        subtitle = { Text(text = stringResource(GuidedTourRes.string.level_subtitle)) },
         onUndo = {
             state.undoLastStroke()
             currentStep = max(1, currentStep - 1)

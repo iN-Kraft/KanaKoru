@@ -1,0 +1,4 @@
+<resources>
+    <string name="level_title">Freehand</string>
+    <string name="level_subtitle">Draw the character without any guides.</string>
+</resources>
