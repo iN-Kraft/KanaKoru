@@ -1,0 +1,31 @@
+<resources>
+    <string-array name="finish_title_perfect">
+        <item>Perfect Score!</item>
+        <item>Outstanding!</item>
+        <item>Masterful!</item>
+        <item>Flawless!</item>
+    </string-array>
+    <string-array name="finish_title_success">
+        <item>Well Done!</item>
+        <item>Great Job!</item>
+        <item>Nice Work!</item>
+        <item>Solid!</item>
+    </string-array>
+
+    <string-array name="finish_message_perfect">
+        <item>Flawless! You've mastered this character.</item>
+        <item>Not a single mistake. You're a pro!</item>
+        <item>Your precision is unmatched!</item>
+        <item>You are writing like a native!</item>
+    </string-array>
+    <string-array name="finish_message_success">
+        <item>Solid performance. You're ready for the next step.</item>
+        <item>Your stroke order is looking really good.</item>
+        <item>You've got the basics down. Keep going!</item>
+        <item>Good rhythm and accuracy. On to the next!</item>
+    </string-array>
+
+    <string name="finish_percentage">%1$d%</string>
+    <string name="finish_accuracy">Accuracy</string>
+    <string name="finish_next">Next</string>
+</resources>

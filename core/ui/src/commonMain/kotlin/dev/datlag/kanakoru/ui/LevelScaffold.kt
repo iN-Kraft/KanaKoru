@@ -55,6 +55,7 @@ import com.composables.icons.materialsymbols.rounded.Check
 import com.composables.icons.materialsymbols.rounded.Format_paint
 import com.composables.icons.materialsymbols.rounded.Sound_sampler
 import com.composables.icons.materialsymbols.rounded.Undo
+import dev.datlag.kanakoru.ui.level.FinishBottomSheet
 import dev.datlag.kanakoru.ui.model.CanvasChar
 import dev.datlag.kanakoru.ui.model.DollarNCanvasState
 import dev.datlag.kommons.locale.Japan
@@ -168,61 +169,13 @@ fun LevelScaffold(
         var sheetVisible by remember(isSuccess) { mutableStateOf(isSuccess) }
 
         if (sheetVisible) {
-            ModalBottomSheet(
-                onDismissRequest = { },
-                sheetGesturesEnabled = false,
-                properties = ModalBottomSheetProperties(
-                    shouldDismissOnBackPress = false,
-                    shouldDismissOnClickOutside = false
-                )
-            ) {
-                Box(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    contentAlignment = Alignment.Center
-                ) {
-                    val resultScore = stateResult.getOrNull()?.displayScore ?: 100
-                    var visibleScore by remember { mutableIntStateOf(0) }
-                    val animatedScore by animateIntAsState(
-                        targetValue = visibleScore,
-                        animationSpec = tween(1000)
-                    )
-
-                    LaunchedEffect(resultScore) {
-                        delay(200)
-                        visibleScore = resultScore
-                    }
-
-                    CircularWavyProgressIndicator(
-                        progress = {
-                            animatedScore / 100F
-                        },
-                        modifier = Modifier.size(100.dp),
-                        stroke = Stroke(
-                            width = with(LocalDensity.current) {
-                                8.dp.toPx()
-                            },
-                            cap = StrokeCap.Round
-                        )
-                    )
-                    Text(text = "${resultScore}%")
+            FinishBottomSheet(
+                score = stateResult.getOrNull()?.displayScore ?: 100,
+                onNext = {
+                    sheetVisible = false
+                    onFinish()
                 }
-                Button(
-                    onClick = {
-                        sheetVisible = false
-                        onFinish()
-                    },
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    shapes = ButtonDefaults.shapes()
-                ) {
-                    Icon(
-                        modifier = Modifier.size(ButtonDefaults.IconSize),
-                        imageVector = MaterialSymbols.Rounded.Check,
-                        contentDescription = null
-                    )
-                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(text = "Next")
-                }
-            }
+            )
         }
     }
 }
