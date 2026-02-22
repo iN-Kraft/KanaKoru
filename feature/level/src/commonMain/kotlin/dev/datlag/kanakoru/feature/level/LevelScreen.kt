@@ -20,15 +20,20 @@ import dev.datlag.kanakoru.ui.common.rememberNavBackStack
 fun LevelScreen(
     char: JapaneseChar,
     onBack: () -> Unit,
+    onFinish: () -> Unit,
     viewModel: LevelViewModel = viewModel(key = char.uniqueTag()) { LevelViewModel(char) }
 ) {
     val backStack = rememberNavBackStack(LevelSerialization.configuration, key = char.uniqueTag(), viewModel.startDestination)
     val nextLevel = remember(viewModel, backStack) {
-        {
+        invoker@{
             val next = viewModel.getNextRoute(backStack.last())
 
             if (next != null) {
                 backStack.push(next)
+                return@invoker
+            } else {
+                onFinish()
+                return@invoker
             }
         }
     }

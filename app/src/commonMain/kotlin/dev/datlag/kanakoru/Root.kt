@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import dev.datlag.kanakoru.feature.NavSerialization
+import dev.datlag.kanakoru.feature.completion.featureCompletion
 import dev.datlag.kanakoru.feature.home.featureHome
 import dev.datlag.kanakoru.feature.home.navigation.Home
 import dev.datlag.kanakoru.feature.kana.featureKana
@@ -40,6 +41,7 @@ fun Root() {
                     featureHome(backStack)
                     featureKana(backStack)
                     featureLevel(backStack)
+                    featureCompletion(backStack)
                 }
             )
         }

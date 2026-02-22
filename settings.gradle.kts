@@ -24,6 +24,7 @@ include(":core", ":core:dollarN", ":core:kodein", ":core:model", ":core:ui")
 include(":feature")
 include(":feature:home", ":feature:home:navigation")
 include(":feature:kana", ":feature:kana:navigation")
+include(":feature:completion", ":feature:completion:navigation")
 
 include(":feature:level", ":feature:level:navigation")
 include(":feature:level:guidedTour", "feature:level:guidedTour:navigation")

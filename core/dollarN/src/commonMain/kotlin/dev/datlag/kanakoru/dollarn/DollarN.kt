@@ -83,7 +83,7 @@ class DollarN(
 
         return Result(
             key = bestTemplate.key,
-            score = calculateScore(bestDistance, isSmallInput)
+            _score = calculateScore(bestDistance, isSmallInput)
         )
     }
 
@@ -227,8 +227,16 @@ class DollarN(
     @Serializable
     data class Result(
         val key: Char,
-        val score: Float
+        private val _score: Float
     ) {
+
+        val score = if (_score.isNaN()) {
+            0F
+        } else if (_score.isInfinite()) {
+            100F
+        } else {
+            _score
+        }
 
         val isSuccess: Boolean = score >= SUCCESS_THRESHOLD
         val displayScore: Int = run {

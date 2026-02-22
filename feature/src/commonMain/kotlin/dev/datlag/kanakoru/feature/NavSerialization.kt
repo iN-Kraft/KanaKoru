@@ -2,6 +2,7 @@ package dev.datlag.kanakoru.feature
 
 import androidx.navigation3.runtime.NavKey
 import androidx.savedstate.serialization.SavedStateConfiguration
+import dev.datlag.kanakoru.feature.completion.Completion
 import dev.datlag.kanakoru.feature.home.navigation.Home
 import dev.datlag.kanakoru.feature.kana.navigation.Kana
 import dev.datlag.kanakoru.feature.level.navigation.Level
@@ -21,6 +22,7 @@ object NavSerialization {
             subclass(Kana.Hiragana::class)
             subclass(Kana.Katakana::class)
             subclass(Level::class)
+            subclass(Completion::class)
         }
     }
 
