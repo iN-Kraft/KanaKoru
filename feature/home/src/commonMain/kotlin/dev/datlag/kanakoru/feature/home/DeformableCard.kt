@@ -8,45 +8,53 @@ import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import dev.datlag.kanakoru.ui.InclusiveCutoutShape
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun DeformableCard(
     onClick: () -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     circleRadius: Dp,
     gap: Dp = 4.dp,
     cardColors: CardColors,
+    defaultShape: CornerBasedShape = MaterialTheme.shapes.largeIncreased,
     circleContent: @Composable BoxScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val defaultShape = CardDefaults.shape
     val density = LocalDensity.current
-    val (topLeft, bottomLeft, bottomRight) = remember(defaultShape, density) {
-        when (defaultShape) {
-            is CornerBasedShape -> {
-                Triple(
-                    with(density) {
-                        defaultShape.topStart.toPx(Size.Unspecified, density).toDp()
-                    },
-                    with(density) {
-                        defaultShape.bottomStart.toPx(Size.Unspecified, density).toDp()
-                    },
-                    with(density) {
-                        defaultShape.bottomEnd.toPx(Size.Unspecified, density).toDp()
-                    },
-                )
-            }
-            else -> Triple(12.dp, 12.dp, 12.dp)
+    val direction = LocalLayoutDirection.current
+    val (topLeft, bottomLeft, bottomRight) = remember(defaultShape, density, direction) {
+        val (left, right) = if (direction == LayoutDirection.Ltr) {
+            defaultShape.bottomStart to defaultShape.bottomEnd
+        } else {
+            defaultShape.bottomEnd to defaultShape.bottomStart
         }
+
+        Triple(
+            with(density) {
+                defaultShape.topStart.toPx(Size.Unspecified, density).toDp()
+            },
+            with(density) {
+                left.toPx(Size.Unspecified, density).toDp()
+            },
+            with(density) {
+                right.toPx(Size.Unspecified, density).toDp()
+            },
+        )
     }
     val cardShape = InclusiveCutoutShape(
         circleRadius = circleRadius,
@@ -54,7 +62,7 @@ fun DeformableCard(
         topLeft = topLeft,
         bottomLeft = bottomLeft,
         bottomRight = bottomRight,
-        smoothing = (topLeft * 2) - (topLeft / 2)
+        smoothing = topLeft
     )
 
     Box(modifier = modifier) {

@@ -19,7 +19,7 @@ iNKraft-utils = "1.1.0"
 iNKraft-kommons = "2.0.0"
 kodein = "7.31.0"
 kotlin = "2.3.10"
-ksp = "2.3.5"
+ksp = "2.3.6"
 ktfmt = "0.25.0"
 ktor = "3.4.0"
 lifecycle = "2.9.6"
@@ -87,7 +87,23 @@ window = { group = "org.jetbrains.androidx.window", name = "window-core", versio
 window-size = { group = "org.jetbrains.compose.material3", name = "material3-window-size-class", version.ref = "material3" }
 
 [bundles]
-feature = [ "arrow", "coil-compose", "compose-material3", "compose-resources", "compose-ui-tooling", "datetime", "icons", "immutable", "inkraft-utils", "kodein-compose-runtime", "lifecycle", "lifecycle-viewmodel", "navigation3-ui", "window", "window-size" ]
+feature = [
+    "arrow",
+    "coil-compose",
+    "compose-material3",
+    "compose-resources",
+    "compose-ui-tooling",
+    "datetime",
+    "icons",
+    "immutable",
+    "inkraft-utils",
+    "kodein-compose-runtime",
+    "lifecycle",
+    "lifecycle-viewmodel",
+    "navigation3-ui",
+    "window",
+    "window-size"
+]
 feature-navigation = [ "arrow", "navigation3", "serialization" ]
 test = [ "coroutines-test", "test" ]
 

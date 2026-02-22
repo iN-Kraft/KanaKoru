@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,24 +25,36 @@ import androidx.compose.ui.unit.dp
 import dev.datlag.kanakoru.model.JapaneseChar
 import kotlinx.collections.immutable.ImmutableList
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun getSegmentedShape(index: Int, totalCount: Int): Shape {
-    val outerRadius = 24.dp
-    val innerRadius = 4.dp
-
+internal fun getSegmentedShape(
+    index: Int,
+    totalCount: Int,
+    large: CornerBasedShape = MaterialTheme.shapes.largeIncreased,
+    small: CornerBasedShape = MaterialTheme.shapes.small
+): Shape {
     return if (totalCount == 1) {
-        RoundedCornerShape(outerRadius)
+        RoundedCornerShape(
+            topStart = large.topStart,
+            topEnd = large.topEnd,
+            bottomStart = large.bottomStart,
+            bottomEnd = large.bottomEnd
+        )
     } else {
         when (index) {
             0 -> RoundedCornerShape(
-                topStart = outerRadius, topEnd = outerRadius,
-                bottomStart = innerRadius, bottomEnd = innerRadius
+                topStart = large.topStart,
+                topEnd = large.topEnd,
+                bottomStart = small.bottomStart,
+                bottomEnd = small.bottomEnd
             )
             totalCount - 1 -> RoundedCornerShape(
-                topStart = innerRadius, topEnd = innerRadius,
-                bottomStart = outerRadius, bottomEnd = outerRadius
+                topStart = small.topStart,
+                topEnd = small.topEnd,
+                bottomStart = large.bottomStart,
+                bottomEnd = large.bottomEnd
             )
-            else -> RoundedCornerShape(innerRadius)
+            else -> small
         }
     }
 }

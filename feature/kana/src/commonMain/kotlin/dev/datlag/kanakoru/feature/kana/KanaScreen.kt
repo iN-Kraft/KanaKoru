@@ -103,10 +103,10 @@ fun KanaScreen(
             }
 
             allChars.flatMap { char ->
-                if (char in listOf(typeCompanion.ya, typeCompanion.yu, typeCompanion.wa, typeCompanion.wo)) {
-                    listOf(char, null)
-                } else {
-                    listOf(char)
+                when (char) {
+                    in listOf(typeCompanion.ya, typeCompanion.yu) -> listOf(char, null)
+                    typeCompanion.wa -> listOf(char, null, null, null)
+                    else -> listOf(char)
                 }
             }.chunked(5).map { it.toImmutableList() }.toImmutableList()
         }
@@ -136,7 +136,7 @@ fun KanaScreen(
                 LazyColumn(
                     modifier = Modifier.weight(1.5F),
                     contentPadding = PaddingValues(vertical = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     itemsIndexed(chunkedChars) { index, rowChars ->
                         val shape = getSegmentedShape(index, chunkedChars.size)
@@ -153,7 +153,7 @@ fun KanaScreen(
                 modifier = Modifier
                     .fillMaxSize(),
                 contentPadding = innerPadding.merge(PaddingValues(16.dp)),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 item {
                     Column(
