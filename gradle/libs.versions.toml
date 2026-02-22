@@ -12,6 +12,7 @@ coroutines = "1.10.2"
 datetime = "0.7.1"
 desugar = "2.1.5"
 detekt = "2.0.0-alpha.2"
+guard = "1.0.0-beta02"
 icons = "2.2.1"
 immutable = "0.4.0"
 iNKraft-utils = "1.1.0"
@@ -97,6 +98,7 @@ cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotli
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 detekt = { id = "dev.detekt", version.ref = "detekt" }
+guard = { id = "com.rubensousa.projectguard", version.ref = "guard" }
 jvm = { id = "org.jetbrains.kotlin.jvm" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }

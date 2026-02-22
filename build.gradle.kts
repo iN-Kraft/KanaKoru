@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.compose) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.guard)
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.ktfmt) apply false
     alias(libs.plugins.multiplatform) apply false
@@ -15,6 +16,28 @@ plugins {
     alias(libs.plugins.sentry) apply false
     alias(libs.plugins.serialization) apply false
     alias(libs.plugins.versions)
+}
+
+projectGuard {
+    restrictModule(projects.core.dollarN) {
+        allow(projects.core.model)
+        allowExternalLibraries()
+        reason("Plain algorithm layer should not depend on other layers except models.")
+    }
+    restrictModule(projects.core.kodein) {
+        allowExternalLibraries()
+        reason("Just an extension of the Kodein DI, should not depend on other layers.")
+    }
+    restrictModule(projects.core.model) {
+        allowExternalLibraries()
+        reason("Pure data layer should not depend on other layers.")
+    }
+    restrictModule(projects.core.ui) {
+        allow(projects.core.model, projects.core.dollarN, projects.core.kodein)
+        allowExternalLibraries()
+        reason("Basic UI layer should only depend on other basic layers of same domain.")
+    }
+
 }
 
 tasks.withType<Detekt>().configureEach {
