@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.openrewrite) apply false
     alias(libs.plugins.sentry) apply false
     alias(libs.plugins.serialization) apply false
+    alias(libs.plugins.sqldelight) apply false
     alias(libs.plugins.versions)
 }
 

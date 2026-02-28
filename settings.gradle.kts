@@ -33,6 +33,8 @@ include(":feature:level:tracer", "feature:level:tracer:navigation")
 include(":feature:level:finisher", "feature:level:finisher:navigation")
 include(":feature:level:master", "feature:level:master:navigation")
 
+include(":repository", ":repository:local")
+
 fun findProperty(key: String): String? {
     val localProperties = java.util.Properties().apply {
         val file = rootDir.resolve("local.properties")

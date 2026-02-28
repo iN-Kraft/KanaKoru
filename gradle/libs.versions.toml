@@ -5,6 +5,7 @@ android-core = "1.17.0"
 android-material = "1.13.0"
 arrow = "2.2.1.1"
 browser = "0.5.0"
+codepoints = "0.11.0"
 coil = "3.3.0"
 compose = "1.10.1"
 connectivity = "2.4.1"
@@ -29,6 +30,7 @@ navigation3-ui = "1.0.0-alpha06"
 openrewrite = "7.26.0"
 sentry = "0.24.0"
 serialization = "1.10.0"
+sqldelight = "2.2.1"
 tts = "3.0.0"
 versions = "0.53.0"
 window = "1.5.1"
@@ -44,6 +46,7 @@ arrow-optics = { group = "io.arrow-kt", name = "arrow-optics", version.ref = "ar
 arrow-resilience = { group = "io.arrow-kt", name = "arrow-resilience", version.ref = "arrow" }
 arrow-serialization = { group = "io.arrow-kt", name = "arrow-core-serialization", version.ref = "arrow" }
 browser = { group = "org.jetbrains.kotlinx", name = "kotlinx-browser", version.ref = "browser" }
+codepoints = { group = "de.cketti.unicode", name = "kotlin-codepoints-deluxe", version.ref = "codepoints" }
 coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil" }
@@ -81,6 +84,10 @@ navigation3-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "li
 reflection = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 sentry = { group = "io.sentry", name = "sentry-kotlin-multiplatform", version.ref = "sentry" }
 serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "serialization" }
+sqldelight-android = { group = "app.cash.sqldelight", name = "android-driver", version.ref = "sqldelight" }
+sqldelight-browser = { group = "app.cash.sqldelight", name = "web-worker-driver", version.ref = "sqldelight" }
+sqldelight-coroutines = { group = "app.cash.sqldelight", name = "coroutines-extensions", version.ref = "sqldelight" }
+sqldelight-native = { group = "app.cash.sqldelight", name = "native-driver", version.ref = "sqldelight" }
 test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 text-to-speech = { group = "nl.marc-apps", name = "tts-compose", version.ref = "tts" }
 window = { group = "org.jetbrains.androidx.window", name = "window-core", version.ref = "window" }
@@ -122,4 +129,5 @@ multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotl
 openrewrite = { id = "org.openrewrite.rewrite", version.ref = "openrewrite" }
 sentry = { id = "io.sentry.kotlin.multiplatform.gradle", version.ref = "sentry" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "versions" }
