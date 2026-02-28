@@ -12,6 +12,7 @@ import dev.datlag.kanakoru.feature.level.finisher.resources.level_title
 import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.ui.DollarNCanvas
 import dev.datlag.kanakoru.ui.LevelScaffold
+import dev.datlag.kanakoru.ui.canvas.rememberDollarNCanvasConfig
 import dev.datlag.kanakoru.ui.model.CanvasChar
 import dev.datlag.kanakoru.ui.model.rememberDollarNCanvasState
 import org.jetbrains.compose.resources.stringResource
@@ -35,6 +36,11 @@ fun FinisherScreen(
         char = activeChar,
         key = fullChar
     ) { }
+    val config = rememberDollarNCanvasConfig(
+        showOrder = false,
+        showStartingPoints = false,
+        showTemplate = false
+    )
 
     LevelScaffold(
         title = { Text(text = stringResource(FinisherRes.string.level_title)) },
@@ -43,18 +49,14 @@ fun FinisherScreen(
         canvasState = state,
         templateChar = activeChar,
         onFinish = onFinish,
-        showOrder = false,
-        showStart = false,
-        showTemplate = false
+        config = config
     ) {
         DollarNCanvas(
             char = activeChar,
             state = state,
             modifier = Modifier.fillMaxSize(),
             staticStrokes = staticChar.strokes,
-            showOrder = false,
-            showStart = false,
-            showTemplate = false
+            config = config
         )
     }
 }

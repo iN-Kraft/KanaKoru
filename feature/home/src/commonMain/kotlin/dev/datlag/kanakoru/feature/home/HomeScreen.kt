@@ -43,9 +43,9 @@ import dev.datlag.kanakoru.feature.home.resources.hiragana_char
 import dev.datlag.kanakoru.feature.home.resources.katakana
 import dev.datlag.kanakoru.feature.home.resources.katakana_char
 import dev.datlag.kanakoru.feature.home.resources.ready_to_learn
-import dev.datlag.kanakoru.ui.ColoredSVG
 import dev.datlag.kanakoru.ui.common.merge
 import dev.datlag.kanakoru.ui.common.plus
+import dev.datlag.kanakoru.ui.svg.AsyncSVG
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -112,10 +112,9 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        ColoredSVG(
+                        AsyncSVG(
                             modifier = Modifier.fillMaxSize(),
                             model = if (isSystemInDarkTheme()) Image.dreamerDark else Image.dreamerLight,
-                            placeholderRegex = "".toRegex(),
                             contentDescription = null,
                             alignment = Alignment.Center,
                             contentScale = ContentScale.FillWidth
@@ -171,10 +170,9 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        ColoredSVG(
+                        AsyncSVG(
                             modifier = Modifier.fillMaxSize(),
                             model = if (isSystemInDarkTheme()) Image.relaxingAtHomeDark else Image.relaxingAtHomeLight,
-                            placeholderRegex = "".toRegex(),
                             contentDescription = null,
                             alignment = Alignment.Center,
                             contentScale = ContentScale.FillWidth

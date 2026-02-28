@@ -33,8 +33,8 @@ import dev.datlag.kanakoru.feature.completion.resources.done
 import dev.datlag.kanakoru.feature.completion.resources.mastered_subtitle
 import dev.datlag.kanakoru.feature.completion.resources.mastered_title
 import dev.datlag.kanakoru.model.JapaneseChar
-import dev.datlag.kanakoru.ui.ColoredSVG
 import dev.datlag.kanakoru.ui.common.calculateWindowSizeClass
+import dev.datlag.kanakoru.ui.svg.AsyncSVG
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -65,9 +65,8 @@ fun CompletionScreen(
                     modifier = Modifier.fillMaxHeight().weight(1F),
                     contentAlignment = Alignment.Center
                 ) {
-                    ColoredSVG(
+                    AsyncSVG(
                         modifier = Modifier.fillMaxWidth(0.6F),
-                        placeholderRegex = "".toRegex(),
                         model = image,
                         contentDescription = null
                     )
@@ -103,9 +102,8 @@ fun CompletionScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.CenterVertically)
             ) {
-                ColoredSVG(
+                AsyncSVG(
                     modifier = Modifier.fillMaxWidth(0.6F),
-                    placeholderRegex = "".toRegex(),
                     model = image,
                     contentDescription = null
                 )

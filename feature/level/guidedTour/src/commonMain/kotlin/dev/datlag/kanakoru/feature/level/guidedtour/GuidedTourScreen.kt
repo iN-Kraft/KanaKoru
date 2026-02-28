@@ -11,6 +11,7 @@ import dev.datlag.kanakoru.feature.level.guidedTour.resources.level_subtitle
 import dev.datlag.kanakoru.feature.level.guidedTour.resources.level_title
 import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.ui.LevelScaffold
+import dev.datlag.kanakoru.ui.canvas.rememberDollarNCanvasConfig
 import dev.datlag.kanakoru.ui.model.CanvasChar
 import dev.datlag.kanakoru.ui.model.rememberDollarNCanvasState
 import org.jetbrains.compose.resources.stringResource
@@ -49,6 +50,9 @@ fun GuidedTourScreen(
             }
         }
     )
+    val config = rememberDollarNCanvasConfig(
+        showOrder = false
+    )
 
     LevelScaffold(
         title = { Text(text = stringResource(GuidedTourRes.string.level_title)) },
@@ -67,6 +71,6 @@ fun GuidedTourScreen(
         canvasState = state,
         templateChar = currentVisibleChar,
         onFinish = onFinish,
-        showOrder = false
+        config = config
     )
 }

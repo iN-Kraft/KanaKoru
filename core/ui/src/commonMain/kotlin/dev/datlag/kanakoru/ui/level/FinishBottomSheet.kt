@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -33,7 +34,7 @@ import kotlinx.collections.immutable.toImmutableList
 import org.jetbrains.compose.resources.stringArrayResource
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 internal fun FinishBottomSheet(
     score: Int,
@@ -89,7 +90,8 @@ internal fun FinishBottomSheet(
 
                 Button(
                     onClick = onNext,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shapes = ButtonDefaults.shapes()
                 ) {
                     Text(text = stringResource(CoreUIRes.string.finish_next))
                     Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))

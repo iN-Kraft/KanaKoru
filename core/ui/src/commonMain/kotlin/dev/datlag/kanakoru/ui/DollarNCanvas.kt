@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -26,6 +27,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.datlag.kanakoru.dollarn.DollarN
 import dev.datlag.kanakoru.dollarn.Point
+import dev.datlag.kanakoru.ui.canvas.DollarNCanvasConfig
+import dev.datlag.kanakoru.ui.canvas.rememberDollarNCanvasConfig
 import dev.datlag.kanakoru.ui.model.CanvasChar
 import dev.datlag.kanakoru.ui.model.DollarNCanvasState
 import kotlinx.collections.immutable.ImmutableList
@@ -36,19 +39,21 @@ fun DollarNCanvas(
     char: CanvasChar,
     state: DollarNCanvasState,
     modifier: Modifier = Modifier,
-    showStart: Boolean = true,
-    showOrder: Boolean = true,
-    showTemplate: Boolean = true,
+    config: DollarNCanvasConfig = rememberDollarNCanvasConfig(),
     staticStrokes: ImmutableList<CanvasChar.Stroke> = persistentListOf(),
     baseStrokeWidth: Dp = 18.dp
 ) {
     val density = LocalDensity.current
+
+    // Theming
     val contentColor = MaterialTheme.colorScheme.onBackground
     val drawingColor = MaterialTheme.colorScheme.tertiary
     val templateColor = MaterialTheme.colorScheme.surfaceContainer
     val badgeColor = MaterialTheme.colorScheme.primary
     val onBadgeColor = MaterialTheme.colorScheme.onPrimary
+    val gridColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3F)
 
+    // Dimension calculations
     val strokeWidthPx = remember(baseStrokeWidth, density) {
         with(density) { baseStrokeWidth.toPx() }
     }
@@ -58,6 +63,8 @@ fun DollarNCanvas(
     val textSizeSp = remember(baseStrokeWidth, density) {
         with(density) { (baseStrokeWidth * 0.8F).toSp() }
     }
+
+    // Graphic objects
     val textMeasurer = rememberTextMeasurer()
     val strokeStyle = remember(strokeWidthPx) {
         Stroke(
@@ -66,6 +73,16 @@ fun DollarNCanvas(
             join = StrokeJoin.Round
         )
     }
+    val gridPathEffect = remember(density) {
+        val dashOn = with(density) { 4.dp.toPx() }
+        val dashOff = with(density) { 8.dp.toPx() }
+
+        PathEffect.dashPathEffect(floatArrayOf(dashOn, dashOff), 0F)
+    }
+    val gridLineWidth = remember(density) {
+        with(density) { 2.dp.toPx() }
+    }
+
     val stateResult by state.lastResult.collectAsState()
     val drawingEnabled = remember(stateResult) {
         stateResult.isLeft { error ->
@@ -77,9 +94,6 @@ fun DollarNCanvas(
                 else -> false
             }
         }
-    }
-    val templateSizeForced = remember(showTemplate, showStart, showOrder) {
-        showTemplate || showStart || showOrder
     }
 
     BoxWithConstraints(modifier = modifier) {
@@ -105,8 +119,8 @@ fun DollarNCanvas(
             char.contentSize * scale
         }
 
-        LaunchedEffect(templateSize, templateSizeForced) {
-            state.updateTemplateSize(templateSize.takeIf { templateSizeForced && it > 0F })
+        LaunchedEffect(templateSize, config.forceSize) {
+            state.updateTemplateSize(templateSize.takeIf { config.forceSize && it > 0F })
         }
 
         Canvas(
@@ -132,7 +146,36 @@ fun DollarNCanvas(
                     }
                 }
         ) {
-            if (showTemplate) {
+            if (config.showGrid) {
+                val paddingPx = 16.dp.toPx()
+                val minDimension = minOf(size.width, size.height)
+                val lineLength = (minDimension - (paddingPx * 2)).coerceAtLeast(0f)
+                val offset = lineLength / 2F
+                val cx = center.x
+                val cy = center.y
+
+                // Vertical
+                drawLine(
+                    color = gridColor,
+                    start = Offset(x = cx, y = cy - offset),
+                    end = Offset(x = cx, y = cy + offset),
+                    pathEffect = gridPathEffect,
+                    strokeWidth = gridLineWidth,
+                    cap = StrokeCap.Round
+                )
+
+                // Horizontal
+                drawLine(
+                    color = gridColor,
+                    start = Offset(x = cx - offset, y = cy),
+                    end = Offset(x = cx + offset, y = cy),
+                    pathEffect = gridPathEffect,
+                    strokeWidth = gridLineWidth,
+                    cap = StrokeCap.Round
+                )
+            }
+
+            if (config.showTemplate) {
                 withTransform({
                     translate(left = offsetX, top = offsetY)
                     scale(scale = scale, pivot = Offset.Zero)
@@ -178,7 +221,7 @@ fun DollarNCanvas(
                 )
             }
 
-            if (showStart || showOrder) {
+            if (config.showStartingPoints || config.showOrder) {
                 val textStyle = TextStyle(
                     fontSize = textSizeSp,
                     color = onBadgeColor
@@ -188,7 +231,7 @@ fun DollarNCanvas(
                     val screenX = (stroke.startOffset.x * scale) + offsetX
                     val screenY = (stroke.startOffset.y * scale) + offsetY
 
-                    if (showStart) {
+                    if (config.showStartingPoints) {
                         val badgeCenter = Offset(screenX, screenY)
 
                         drawCircle(
@@ -198,7 +241,7 @@ fun DollarNCanvas(
                         )
                     }
 
-                    if (showOrder) {
+                    if (config.showOrder) {
                         val result = textMeasurer.measure(
                             text = (stroke.index + 1).toString(),
                             style = textStyle

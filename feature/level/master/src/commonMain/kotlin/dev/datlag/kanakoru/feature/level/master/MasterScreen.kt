@@ -8,6 +8,7 @@ import dev.datlag.kanakoru.feature.level.master.resources.level_subtitle
 import dev.datlag.kanakoru.feature.level.master.resources.level_title
 import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.ui.LevelScaffold
+import dev.datlag.kanakoru.ui.canvas.rememberDollarNCanvasConfig
 import dev.datlag.kanakoru.ui.model.CanvasChar
 import dev.datlag.kanakoru.ui.model.rememberDollarNCanvasState
 import org.jetbrains.compose.resources.stringResource
@@ -22,6 +23,11 @@ fun MasterScreen(
         CanvasChar(japaneseChar)
     }
     val state = rememberDollarNCanvasState(canvasChar) { }
+    val config = rememberDollarNCanvasConfig(
+        showStartingPoints = false,
+        showOrder = false,
+        showTemplate = false
+    )
 
     LevelScaffold(
         title = { Text(text = stringResource(MasterRes.string.level_title)) },
@@ -30,8 +36,6 @@ fun MasterScreen(
         canvasState = state,
         templateChar = canvasChar,
         onFinish = onFinish,
-        showStart = false,
-        showOrder = false,
-        showTemplate = false
+        config = config
     )
 }

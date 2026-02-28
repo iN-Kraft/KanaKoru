@@ -53,8 +53,12 @@ import com.composables.icons.materialsymbols.MaterialSymbols
 import com.composables.icons.materialsymbols.rounded.Arrow_back_ios_new
 import com.composables.icons.materialsymbols.rounded.Check
 import com.composables.icons.materialsymbols.rounded.Format_paint
+import com.composables.icons.materialsymbols.rounded.Grid_3x3
+import com.composables.icons.materialsymbols.rounded.Grid_3x3_off
 import com.composables.icons.materialsymbols.rounded.Sound_sampler
 import com.composables.icons.materialsymbols.rounded.Undo
+import dev.datlag.kanakoru.ui.canvas.DollarNCanvasConfig
+import dev.datlag.kanakoru.ui.canvas.rememberDollarNCanvasConfig
 import dev.datlag.kanakoru.ui.level.FinishBottomSheet
 import dev.datlag.kanakoru.ui.model.CanvasChar
 import dev.datlag.kanakoru.ui.model.DollarNCanvasState
@@ -79,9 +83,7 @@ fun LevelScaffold(
     modifier: Modifier = Modifier,
     subtitle: @Composable () -> Unit = { },
     snackBarHost: @Composable () -> Unit = { },
-    showStart: Boolean = true,
-    showOrder: Boolean = true,
-    showTemplate: Boolean = true,
+    config: DollarNCanvasConfig = rememberDollarNCanvasConfig(),
     onUndo: () -> Unit = { canvasState.undoLastStroke() },
     onClear: () -> Unit = { canvasState.clear() },
     content: @Composable () -> Unit = {
@@ -89,9 +91,7 @@ fun LevelScaffold(
             char = templateChar,
             state = canvasState,
             modifier = Modifier.fillMaxSize(),
-            showStart = showStart,
-            showOrder = showOrder,
-            showTemplate = showTemplate
+            config = config
         )
     }
 ) {
@@ -114,6 +114,23 @@ fun LevelScaffold(
                     ) {
                         Icon(
                             imageVector = MaterialSymbols.Rounded.Arrow_back_ios_new,
+                            contentDescription = null
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            config.toggleGrid()
+                        },
+                        shapes = IconButtonDefaults.shapes()
+                    ) {
+                        Icon(
+                            imageVector = if (config.showGrid) {
+                                MaterialSymbols.Rounded.Grid_3x3_off
+                            } else {
+                                MaterialSymbols.Rounded.Grid_3x3
+                            },
                             contentDescription = null
                         )
                     }

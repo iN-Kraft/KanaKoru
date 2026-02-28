@@ -53,7 +53,6 @@ import dev.datlag.kanakoru.feature.kana.resources.description_katakana
 import dev.datlag.kanakoru.feature.kana.resources.topbar_hiragana
 import dev.datlag.kanakoru.feature.kana.resources.topbar_katakana
 import dev.datlag.kanakoru.model.JapaneseChar
-import dev.datlag.kanakoru.ui.ColoredSVG
 import dev.datlag.kanakoru.ui.common.calculateWindowSizeClass
 import dev.datlag.kanakoru.ui.common.header
 import dev.datlag.kanakoru.ui.common.merge
