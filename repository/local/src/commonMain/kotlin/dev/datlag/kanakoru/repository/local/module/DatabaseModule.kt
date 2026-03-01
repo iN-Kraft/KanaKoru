@@ -11,7 +11,7 @@ import kotlin.coroutines.CoroutineContext
 object DatabaseModule {
 
     private const val NAME = "DatabaseModule"
-    internal const val REALTIME_DISPATCHER = "RealTimeDispatcher"
+    const val REALTIME_DISPATCHER = "RealTimeDispatcher"
     internal const val DB_FILE = "kanakoru.db"
 
     val di: DI.Module = DI.Module(NAME) {

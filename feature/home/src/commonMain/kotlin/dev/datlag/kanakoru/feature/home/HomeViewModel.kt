@@ -6,6 +6,7 @@ import dev.datlag.kanakoru.feature.home.resources.HomeRes
 import dev.datlag.kanakoru.feature.home.resources.greeting
 import dev.datlag.kanakoru.feature.home.resources.greeting_evening
 import dev.datlag.kanakoru.feature.home.resources.greeting_morning
+import dev.datlag.kanakoru.kodein.directInstance
 import dev.datlag.kanakoru.kodein.optionalInstance
 import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.repository.DrawingRepository
@@ -28,22 +29,22 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
 class HomeViewModel(
-    val drawingRepository: DrawingRepository?
+    val drawingRepository: DrawingRepository
 ) : ViewModel() {
 
     constructor(di: DI) : this(
-        drawingRepository = di.optionalInstance<DrawingRepository>()
+        drawingRepository = di.directInstance<DrawingRepository>()
     )
 
     private val _greeting = MutableStateFlow(HomeRes.string.greeting)
     val greeting = _greeting.asStateFlow()
 
     val recommendedHiragana: Flow<JapaneseChar?> by lazy {
-        drawingRepository?.recommendedHiragana ?: flowOf(null)
+        drawingRepository.recommendedHiragana
     }
 
     val recommendedKatakana: Flow<JapaneseChar?> by lazy {
-        drawingRepository?.recommendedKatakana ?: flowOf(null)
+        drawingRepository.recommendedKatakana
     }
 
     init {

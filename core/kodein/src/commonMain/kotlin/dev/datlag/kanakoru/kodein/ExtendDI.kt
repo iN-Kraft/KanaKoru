@@ -6,6 +6,7 @@ import org.kodein.di.DirectDI
 import org.kodein.di.bindSingleton
 import org.kodein.di.bindings.NoArgBindingDI
 import org.kodein.di.direct
+import org.kodein.di.instance
 import org.kodein.di.instanceOrNull
 
 inline fun <reified T : Any> DI.Builder.optionalSingleton(
@@ -20,3 +21,8 @@ inline fun <reified T : Any> DirectDI.optionalInstance(tag: Any? = null): T? =
 
 inline fun <reified T : Any> DI.optionalInstance(tag: Any? = null): T? =
     direct.optionalInstance(tag = tag)
+
+inline fun <reified T : Any> DI.directInstance(tag: Any? = null): T {
+    val instance by instance<T>(tag)
+    return instance
+}

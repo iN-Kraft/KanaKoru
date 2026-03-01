@@ -48,7 +48,7 @@ class DrawingRepository(
         hiraganaStats.mapLatest { statsMap ->
             JapaneseChar.Hiragana.chars.minWithOrNull { charA, charB ->
                 compare(statsMap[charA], statsMap[charB])
-            } ?: JapaneseChar.Hiragana.a
+            }
         }.distinctUntilChanged()
     }
 
@@ -69,7 +69,7 @@ class DrawingRepository(
         katakanaStats.mapLatest { statsMap ->
             JapaneseChar.Katakana.chars.minWithOrNull { charA, charB ->
                 compare(statsMap[charA], statsMap[charB])
-            } ?: JapaneseChar.Katakana.a
+            }
         }.distinctUntilChanged()
     }
 
