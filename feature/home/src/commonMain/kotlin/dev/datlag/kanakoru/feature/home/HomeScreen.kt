@@ -47,11 +47,14 @@ import dev.datlag.kanakoru.ui.common.merge
 import dev.datlag.kanakoru.ui.common.plus
 import dev.datlag.kanakoru.ui.svg.AsyncSVG
 import org.jetbrains.compose.resources.stringResource
+import org.kodein.di.DI
+import org.kodein.di.compose.localDI
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel { HomeViewModel() },
+    di: DI = localDI(),
+    viewModel: HomeViewModel = viewModel { HomeViewModel(di) },
     onHiraganaClick: () -> Unit,
     onKatakanaClick: () -> Unit
 ) {
@@ -82,6 +85,8 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
+                val recommended by viewModel.recommendedHiragana.collectAsState(null)
+
                 DeformableCard(
                     onClick = onHiraganaClick,
                     modifier = Modifier.fillMaxWidth().height(200.dp),
@@ -101,10 +106,12 @@ fun HomeScreen(
                             ),
                             shape = CircleShape
                         ) {
-                            Text(
-                                text = stringResource(HomeRes.string.hiragana_char),
-                                fontWeight = FontWeight.SemiBold
-                            )
+                            recommended?.let {
+                                Text(
+                                    text = it.value.toString(),
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
                         }
                     }
                 ) {
@@ -140,6 +147,8 @@ fun HomeScreen(
                 }
             }
             item {
+                val recommended by viewModel.recommendedKatakana.collectAsState(null)
+
                 DeformableCard(
                     onClick = onKatakanaClick,
                     modifier = Modifier.fillMaxWidth().height(200.dp),
@@ -159,10 +168,12 @@ fun HomeScreen(
                             ),
                             shape = CircleShape
                         ) {
-                            Text(
-                                text = stringResource(HomeRes.string.katakana_char),
-                                fontWeight = FontWeight.SemiBold
-                            )
+                            recommended?.let {
+                                Text(
+                                    text = it.value.toString(),
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
                         }
                     }
                 ) {

@@ -6,24 +6,45 @@ import dev.datlag.kanakoru.feature.home.resources.HomeRes
 import dev.datlag.kanakoru.feature.home.resources.greeting
 import dev.datlag.kanakoru.feature.home.resources.greeting_evening
 import dev.datlag.kanakoru.feature.home.resources.greeting_morning
+import dev.datlag.kanakoru.kodein.optionalInstance
+import dev.datlag.kanakoru.model.JapaneseChar
+import dev.datlag.kanakoru.repository.DrawingRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.kodein.di.DI
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.Instant
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(
+    val drawingRepository: DrawingRepository?
+) : ViewModel() {
+
+    constructor(di: DI) : this(
+        drawingRepository = di.optionalInstance<DrawingRepository>()
+    )
 
     private val _greeting = MutableStateFlow(HomeRes.string.greeting)
     val greeting = _greeting.asStateFlow()
+
+    val recommendedHiragana: Flow<JapaneseChar?> by lazy {
+        drawingRepository?.recommendedHiragana ?: flowOf(null)
+    }
+
+    val recommendedKatakana: Flow<JapaneseChar?> by lazy {
+        drawingRepository?.recommendedKatakana ?: flowOf(null)
+    }
 
     init {
         startGreeting()

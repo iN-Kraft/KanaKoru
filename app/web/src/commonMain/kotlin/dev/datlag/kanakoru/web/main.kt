@@ -32,6 +32,7 @@ import coil3.svg.SvgDecoder
 import dev.datlag.kanakoru.Color
 import dev.datlag.kanakoru.Root
 import dev.datlag.kanakoru.core.CoreModule
+import dev.datlag.kanakoru.repository.RepositoryModule
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.js.Js
 import kotlinx.coroutines.delay
@@ -47,6 +48,7 @@ import org.kodein.di.instanceOrNull
 fun main() {
     val di = DI {
         import(CoreModule.di)
+        import(RepositoryModule.di)
 
         bindSingleton<PlatformContext> {
             PlatformContext.INSTANCE

@@ -40,6 +40,7 @@ kotlin {
             implementation(projects.feature.kana.navigation)
 
             implementation(projects.core)
+            implementation(projects.repository)
         }
 
         commonTest.dependencies {

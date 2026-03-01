@@ -16,7 +16,7 @@ inline fun <reified T : Any> DI.Builder.optionalSingleton(
 }
 
 inline fun <reified T : Any> DirectDI.optionalInstance(tag: Any? = null): T? =
-    instanceOrNull<Option<T>>(tag = tag)?.getOrNull()
+    instanceOrNull<Option<T>>(tag = tag)?.getOrNull() ?: instanceOrNull<T>(tag = tag)
 
 inline fun <reified T : Any> DI.optionalInstance(tag: Any? = null): T? =
     direct.optionalInstance(tag = tag)

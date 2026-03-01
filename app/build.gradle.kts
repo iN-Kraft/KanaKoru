@@ -42,6 +42,7 @@ kotlin {
             api(libs.kodein.compose)
             api(projects.core)
             api(projects.feature)
+            api(projects.repository)
         }
 
         val skikoMain by creating {

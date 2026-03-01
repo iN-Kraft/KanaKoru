@@ -17,7 +17,6 @@ kotlin {
         namespace = modulePackageName
     }
 
-    jvm()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
@@ -40,7 +39,10 @@ kotlin {
             implementation(libs.sqldelight.coroutines)
             implementation(libs.codepoints)
             implementation(libs.datetime)
+            implementation(libs.coroutines)
+
             implementation(projects.core.model)
+            implementation(projects.core.kodein)
         }
 
         androidMain.dependencies {

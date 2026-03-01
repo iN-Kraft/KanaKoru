@@ -3,6 +3,7 @@ package dev.datlag.kanakoru.android
 import android.app.Application
 import dev.datlag.inkraft.suspendCatching
 import dev.datlag.kanakoru.core.CoreModule
+import dev.datlag.kanakoru.repository.RepositoryModule
 import io.sentry.kotlin.multiplatform.Context
 import org.kodein.di.DI
 import org.kodein.di.DIAware
@@ -19,6 +20,7 @@ class App : Application(), DIAware {
 
     override val di: DI = DI {
         import(CoreModule.di)
+        import(RepositoryModule.di)
 
         bindSingleton<Context> {
             appContext

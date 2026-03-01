@@ -6,6 +6,7 @@ import app.cash.sqldelight.coroutines.mapToList
 import de.cketti.codepoints.deluxe.toCodePoint
 import dev.datlag.kanakoru.model.JapaneseChar
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Clock
@@ -13,7 +14,7 @@ import kotlin.time.Clock
 class DrawingRepository(
     private val localDataSource: KanaKoruDB,
     private val realtimeCoroutineContext: CoroutineContext
-) {
+) : Comparator<DrawingTable?> {
 
     private val queries: DrawingTableQueries
         get() = localDataSource.drawingTableQueries
@@ -35,11 +36,20 @@ class DrawingRepository(
             .getDrawingStatsForGroup(hiraganaCodePointMap.keys)
             .asFlow()
             .mapToList(realtimeCoroutineContext)
+            .distinctUntilChanged()
             .mapLatest { list ->
                 list.mapNotNull { table ->
                     (hiraganaCodePointMap[table.char] ?: return@mapNotNull null) to table
                 }.toMap().toImmutableMap()
-            }
+            }.distinctUntilChanged()
+    }
+
+    val recommendedHiragana by lazy {
+        hiraganaStats.mapLatest { statsMap ->
+            JapaneseChar.Hiragana.chars.minWithOrNull { charA, charB ->
+                compare(statsMap[charA], statsMap[charB])
+            } ?: JapaneseChar.Hiragana.a
+        }.distinctUntilChanged()
     }
 
     val katakanaStats by lazy {
@@ -47,11 +57,54 @@ class DrawingRepository(
             .getDrawingStatsForGroup(katakanaCodePointMap.keys)
             .asFlow()
             .mapToList(realtimeCoroutineContext)
+            .distinctUntilChanged()
             .mapLatest { list ->
                 list.mapNotNull { table ->
                     (katakanaCodePointMap[table.char] ?: return@mapNotNull null) to table
                 }.toMap().toImmutableMap()
-            }
+            }.distinctUntilChanged()
+    }
+
+    val recommendedKatakana by lazy {
+        katakanaStats.mapLatest { statsMap ->
+            JapaneseChar.Katakana.chars.minWithOrNull { charA, charB ->
+                compare(statsMap[charA], statsMap[charB])
+            } ?: JapaneseChar.Katakana.a
+        }.distinctUntilChanged()
+    }
+
+    override fun compare(a: DrawingTable?, b: DrawingTable?): Int {
+        val scoreA = if (a?.score?.isNaN() == true) 0.0 else a?.score ?: 0.0
+        val scoreB = if (b?.score?.isNaN() == true) 0.0 else b?.score ?: 0.0
+
+        val countA = a?.reviewCount ?: 0
+        val countB = b?.reviewCount ?: 0
+
+        if (countA <= 0 && countB > 0) {
+            return -1
+        }
+        if (countB <= 0 && countA > 0) {
+            return 1
+        }
+
+        val isWeakA = scoreA < 0.8
+        val isWeakB = scoreB < 0.8
+
+        if (isWeakA && !isWeakB) {
+            return -1
+        }
+        if (isWeakB && !isWeakA) {
+            return 1
+        }
+
+        if (isWeakA && isWeakB) {
+            return scoreA.compareTo(scoreB)
+        }
+
+        val timeA = a?.lastReview ?: Long.MAX_VALUE
+        val timeB = b?.lastReview ?: Long.MAX_VALUE
+
+        return timeA.compareTo(timeB)
     }
 
     suspend fun saveProgress(char: JapaneseChar, score: Float) {
