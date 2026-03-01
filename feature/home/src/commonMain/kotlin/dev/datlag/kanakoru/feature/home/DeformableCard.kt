@@ -32,6 +32,7 @@ fun DeformableCard(
     gap: Dp = 4.dp,
     cardColors: CardColors,
     defaultShape: CornerBasedShape = MaterialTheme.shapes.largeIncreased,
+    displayCircleContent: Boolean = true,
     circleContent: @Composable BoxScope.() -> Unit = {},
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -56,14 +57,18 @@ fun DeformableCard(
             },
         )
     }
-    val cardShape = InclusiveCutoutShape(
-        circleRadius = circleRadius,
-        padding = gap,
-        topLeft = topLeft,
-        bottomLeft = bottomLeft,
-        bottomRight = bottomRight,
-        smoothing = topLeft
-    )
+    val cardShape = if (displayCircleContent) {
+        InclusiveCutoutShape(
+            circleRadius = circleRadius,
+            padding = gap,
+            topLeft = topLeft,
+            bottomLeft = bottomLeft,
+            bottomRight = bottomRight,
+            smoothing = topLeft
+        )
+    } else {
+        defaultShape
+    }
 
     Box(modifier = modifier) {
         Card(

@@ -96,6 +96,7 @@ fun HomeScreen(
                     ),
                     circleRadius = 24.dp,
                     gap = 8.dp,
+                    displayCircleContent = recommended != null,
                     circleContent = {
                         IconButton(
                             onClick = onHiraganaClick,
@@ -158,6 +159,7 @@ fun HomeScreen(
                     ),
                     circleRadius = 24.dp,
                     gap = 8.dp,
+                    displayCircleContent = recommended != null,
                     circleContent = {
                         IconButton(
                             onClick = onKatakanaClick,
