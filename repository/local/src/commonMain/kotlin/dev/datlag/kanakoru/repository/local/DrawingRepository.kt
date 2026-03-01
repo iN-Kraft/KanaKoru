@@ -1,5 +1,6 @@
 package dev.datlag.kanakoru.repository.local
 
+import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import de.cketti.codepoints.deluxe.toCodePoint
@@ -59,7 +60,7 @@ class DrawingRepository(
         queries.transaction {
             val currentStats = queries.getDrawingStats(
                 codePoint.value.toLong()
-            ).executeAsOneOrNull()
+            ).awaitAsOneOrNull()
 
             val newScore = if (currentStats == null) {
                 score.toDouble()
@@ -79,7 +80,7 @@ class DrawingRepository(
                 newScore = newScore,
                 newCount = newCount,
                 timestamp = Clock.System.now().epochSeconds
-            )
+            ).await()
         }
     }
 
