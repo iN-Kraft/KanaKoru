@@ -1,5 +1,10 @@
 package dev.datlag.kanakoru.feature.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.ColumnScope
@@ -80,13 +85,18 @@ fun DeformableCard(
             content()
         }
 
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .size(circleRadius * 2F),
-            contentAlignment = Alignment.Center
+        AnimatedVisibility(
+            modifier = Modifier.align(Alignment.TopEnd),
+            visible = displayCircleContent,
+            enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
+            exit = fadeOut() + shrinkOut(shrinkTowards = Alignment.Center)
         ) {
-            circleContent()
+            Box(
+                modifier = Modifier.size(circleRadius * 2F),
+                contentAlignment = Alignment.Center
+            ) {
+                circleContent()
+            }
         }
     }
 }
