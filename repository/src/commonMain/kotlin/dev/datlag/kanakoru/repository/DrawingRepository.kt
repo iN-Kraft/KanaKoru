@@ -1,6 +1,7 @@
 package dev.datlag.kanakoru.repository
 
 import app.cash.sqldelight.db.SqlDriver
+import dev.datlag.inkraft.suspendCatching
 import dev.datlag.kanakoru.model.JapaneseChar
 import dev.datlag.kanakoru.repository.local.KanaKoruDB
 import kotlinx.coroutines.flow.Flow
@@ -20,24 +21,21 @@ class DrawingRepository(
     private var localRepo: LocalDBRepo? = local
     private val localInitMutex = Mutex()
 
-    val recommendedHiragana: Flow<JapaneseChar?> by lazy {
-        flow {
-            val repo = getOrInitLocalRepo()
-            if (repo != null) {
-                emitAll(repo.recommendedHiragana)
-            } else {
-                emit(null)
-            }
+    val recommendedHiragana: Flow<JapaneseChar?> = flow {
+        val repo = getOrInitLocalRepo()
+        if (repo != null) {
+            emitAll(repo.recommendedHiragana)
+        } else {
+            emit(null)
         }
     }
-    val recommendedKatakana: Flow<JapaneseChar?> by lazy {
-        flow {
-            val repo = getOrInitLocalRepo()
-            if (repo != null) {
-                emitAll(repo.recommendedKatakana)
-            } else {
-                emit(null)
-            }
+
+    val recommendedKatakana: Flow<JapaneseChar?> = flow {
+        val repo = getOrInitLocalRepo()
+        if (repo != null) {
+            emitAll(repo.recommendedKatakana)
+        } else {
+            emit(null)
         }
     }
 
@@ -54,8 +52,16 @@ class DrawingRepository(
     }
 
     private suspend fun createLocalDB(): KanaKoruDB? {
-        val driver = localSqlDriver?.also { KanaKoruDB.Schema.create(it).await() } ?: return null
-        return KanaKoruDB(driver)
+        val driver = localSqlDriver ?: return null
+        val createdSchema = suspendCatching {
+            KanaKoruDB.Schema.create(driver).await()
+        }.isSuccess
+
+        return if (createdSchema) {
+            suspendCatching { KanaKoruDB(driver) }.getOrNull()
+        } else {
+            null
+        }
     }
 
     private suspend fun createLocalRepo(): LocalDBRepo? {
